@@ -1,7 +1,7 @@
 package view;
 
+import entity.Customer;
 import entity.Person;
-import entity.enums.CustomerType;
 import service.CustomerServiceImpl;
 import service.PersonServiceImpl;
 
@@ -39,6 +39,20 @@ public class CustomerMethods {
         if (customerService.save(username, password, person.getId())) {
             CustomerMenu customerMenu = new CustomerMenu();
             customerMenu.showMenu(customerService.load(username, password));
+        }
+    }
+
+    public void login() {
+        System.out.print("Enter username: ");
+        String username = scanner.next();
+        System.out.print("Enter password: ");
+        String password = scanner.next();
+        Customer customer = customerService.load(username, password);
+        if (customer != null) {
+            CustomerMenu customerMenu = new CustomerMenu();
+            customerMenu.showMenu(customer);
+        } else {
+            System.out.println("This username was not found with this password");
         }
     }
 

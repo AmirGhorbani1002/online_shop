@@ -7,26 +7,29 @@ public class MainMenu {
 
     private final Scanner scanner = new Scanner(System.in);
 
-    public void showMenu(){
-        while(true){
+    public void showMenu() {
+        while (true) {
             System.out.println("Welcome to online shop!!!");
             System.out.print("Enter your command (Enter help for get information about commands: ");
             String[] command = scanner.nextLine().split(" ");
-            if(Objects.equals(command[0], "help") && command.length == 1){
+            if (Objects.equals(command[0], "help") && command.length == 1) {
                 helpMenu();
-            } else if(Objects.equals(command[0], "login")){
-                if(Objects.equals(command[1], "admin")){
+            } else if (Objects.equals(command[0], "login")) {
+                if (Objects.equals(command[1], "admin")) {
                     AdminMethods adminMethods = new AdminMethods();
                     adminMethods.login();
+                } else if (Objects.equals(command[1], "customer")) {
+                    CustomerMethods customerMethods = new CustomerMethods();
+                    customerMethods.login();
                 }
 
-            } else if(Objects.equals(command[0], "signup")){
-                if(Objects.equals(command[1], "customer")){
+            } else if (Objects.equals(command[0], "signup")) {
+                if (Objects.equals(command[1], "customer")) {
                     CustomerMethods customerMethods = new CustomerMethods();
                     customerMethods.signup();
                 }
 
-            } else if(Objects.equals(command[0], "exit")){
+            } else if (Objects.equals(command[0], "exit")) {
                 break;
             }
         }
