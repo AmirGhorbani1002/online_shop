@@ -21,12 +21,18 @@ public class MainMenu {
                 } else if (Objects.equals(command[1], "customer")) {
                     CustomerMethods customerMethods = new CustomerMethods();
                     customerMethods.login();
+                } else if(Objects.equals(command[1], "seller")){
+                    SellerMethods sellerMethods = new SellerMethods();
+                    sellerMethods.login();
                 }
 
             } else if (Objects.equals(command[0], "signup")) {
                 if (Objects.equals(command[1], "customer")) {
                     CustomerMethods customerMethods = new CustomerMethods();
                     customerMethods.signup();
+                } else if(Objects.equals(command[1], "seller")){
+                    SellerMethods sellerMethods = new SellerMethods();
+                    sellerMethods.signup();
                 }
 
             } else if (Objects.equals(command[0], "exit")) {
