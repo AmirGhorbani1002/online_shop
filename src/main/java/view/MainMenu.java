@@ -8,20 +8,23 @@ public class MainMenu {
     private final Scanner scanner = new Scanner(System.in);
 
     public void showMenu(){
-        System.out.println("Welcome to online shop!!!");
-        System.out.print("Enter your command(Enter help for get information about commands: ");
-        String[] command = scanner.nextLine().split(" ");
-        if(Objects.equals(command[0], "help") && command.length == 1){
-            helpMenu();
-        } else if(Objects.equals(command[0], "login")){
-            if(Objects.equals(command[1], "admin")){
+        while(true){
+            System.out.println("Welcome to online shop!!!");
+            System.out.print("Enter your command (Enter help for get information about commands: ");
+            String[] command = scanner.nextLine().split(" ");
+            if(Objects.equals(command[0], "help") && command.length == 1){
+                helpMenu();
+            } else if(Objects.equals(command[0], "login")){
+                if(Objects.equals(command[1], "admin")){
+                    AdminMethods adminMethods = new AdminMethods();
+                    adminMethods.login();
+                }
 
+            } else if(Objects.equals(command[0], "signup")){
+
+            } else if(Objects.equals(command[0], "exit")){
+                break;
             }
-
-        } else if(Objects.equals(command[0], "signup")){
-
-        } else if(Objects.equals(command[0], "exit")){
-
         }
     }
 
