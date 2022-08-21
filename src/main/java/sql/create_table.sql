@@ -1,43 +1,44 @@
-CREATE TYPE PersonType AS ENUM ('ADMIN', 'SELLER', 'CUSTOMER');
 CREATE TYPE CustomerType AS ENUM ('VIP', 'NORMAL');
 CREATE TYPE ProductType AS ENUM ('ELECTRONIC_APPLIANCES', 'READABLE', 'SHOES');
+CREATE TYPE DisplayType AS ENUM ('LCD', 'LED', 'OLED', 'QLED');
+CREATE TYPE ShoesType AS ENUM ('SPORT', 'FORMAL', 'SLIPPERS');
+CREATE TYPE BookType AS ENUM ('BOOK', 'MAGAZINE');
+CREATE TYPE BookSubject AS ENUM ('ACTION', 'ADVENTURE', 'COMIC','HORROR', 'FANTASY', 'HISTORICAL');
+CREATE TYPE Color AS ENUM ('BLUE', 'RED', 'PURPLE','YELLOW', 'BLACK', 'WHITE');
 
 create table if not exists person
 (
     id            bigserial primary key not null,
     firstname     varchar(255)          not null,
     lastname      varchar(255)          not null,
-    national_code varchar(255) unique   not null,
-    username      varchar(20) unique    not null,
-    password      varchar(30)           not null,
-    person_type   PersonType            not null
+    national_code varchar(255) unique   not null
     );
 
 create table if not exists admin
 (
     id        bigserial primary key not null,
+    username      varchar(20) unique    not null,
+    password      varchar(30)           not null,
     person_id int8 references Person (id)
     );
 
 create table if not exists customer
 (
     id            bigserial primary key not null,
-    person_id     int8 references Person (id),
-    customer_type CustomerType          not null
+    username      varchar(20) unique    not null,
+    password      varchar(30)           not null,
+    customer_type CustomerType          not null,
+    person_id     int8 references Person (id)
     );
 
 create table if not exists seller
 (
     id           bigserial primary key not null,
-    person_id    int8 references Person (id),
-    product_type ProductType           not null
+    username      varchar(20) unique    not null,
+    password      varchar(30)           not null,
+    product_type ProductType           not null,
+    person_id    int8 references Person (id)
     );
-
-CREATE TYPE DisplayType AS ENUM ('LCD', 'LED', 'OLED', 'QLED');
-CREATE TYPE ShoesType AS ENUM ('SPORT', 'FORMAL', 'SLIPPERS');
-CREATE TYPE BookType AS ENUM ('BOOK', 'MAGAZINE');
-CREATE TYPE BookSubject AS ENUM ('ACTION', 'ADVENTURE', 'COMIC','HORROR', 'FANTASY', 'HISTORICAL');
-CREATE TYPE Color AS ENUM ('BLUE', 'RED', 'PURPLE','YELLOW', 'BLACK', 'WHITE');
 
 create table if not exists product
 (

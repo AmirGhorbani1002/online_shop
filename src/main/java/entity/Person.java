@@ -1,19 +1,15 @@
 package entity;
 
-import entity.enums.PersonType;
-
-public abstract class Person {
+public class Person {
 
     private String firstname;
     private String lastname;
     private String nationalCode;
-    private PersonType personType;
 
-    public Person(String firstname, String lastname, String nationalCode, PersonType personType) {
+    public Person(String firstname, String lastname, String nationalCode) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.nationalCode = nationalCode;
-        this.personType = personType;
     }
 
     public String getFirstname() {
@@ -40,11 +36,4 @@ public abstract class Person {
         this.nationalCode = nationalCode;
     }
 
-    public PersonType getPersonType() {
-        return personType;
-    }
-
-    public void setPersonType(PersonType personType) {
-        this.personType = personType;
-    }
 }

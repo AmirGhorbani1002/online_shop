@@ -1,14 +1,13 @@
 package entity;
 
 import entity.enums.CustomerType;
-import entity.enums.PersonType;
 
 public class Customer extends Person {
 
     private CustomerType type;
 
     public Customer(String firstname, String lastname, String nationalCode, CustomerType type) {
-        super(firstname, lastname, nationalCode, PersonType.Customer);
+        super(firstname, lastname, nationalCode);
         this.type = type;
     }
 
