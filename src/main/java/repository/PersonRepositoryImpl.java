@@ -33,11 +33,7 @@ public class PersonRepositoryImpl{
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
             preparedStatement.setString(1, nationalCode);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(!resultSet.next())
-                return null;
-            return new Person(resultSet.getString("firstname"),resultSet.getString("lastname"),
-                    resultSet.getString("national_code"));
+            return getPerson(preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -51,14 +47,19 @@ public class PersonRepositoryImpl{
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
             preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(!resultSet.next())
-                return null;
-            return new Person(resultSet.getString("firstname"),resultSet.getString("lastname"),
-                    resultSet.getString("national_code"));
+            return getPerson(preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private Person getPerson(PreparedStatement preparedStatement) throws SQLException {
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(!resultSet.next())
+            return null;
+        Person person = new Person(resultSet.getString("firstname"),resultSet.getString("lastname"),
+                resultSet.getString("national_code"));
+        person.setId(resultSet.getLong("id"));
+        return person;
+    }
 }

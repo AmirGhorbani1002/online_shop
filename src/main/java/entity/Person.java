@@ -2,6 +2,7 @@ package entity;
 
 public class Person {
 
+    private long id;
     private String firstname;
     private String lastname;
     private String nationalCode;
@@ -36,4 +37,11 @@ public class Person {
         this.nationalCode = nationalCode;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

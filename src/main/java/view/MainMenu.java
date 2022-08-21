@@ -21,6 +21,10 @@ public class MainMenu {
                 }
 
             } else if(Objects.equals(command[0], "signup")){
+                if(Objects.equals(command[1], "customer")){
+                    CustomerMethods customerMethods = new CustomerMethods();
+                    customerMethods.signup();
+                }
 
             } else if(Objects.equals(command[0], "exit")){
                 break;

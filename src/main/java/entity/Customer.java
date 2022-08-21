@@ -6,9 +6,9 @@ public class Customer extends Person {
 
     private CustomerType type;
 
-    public Customer(String firstname, String lastname, String nationalCode, CustomerType type) {
+    public Customer(String firstname, String lastname, String nationalCode) {
         super(firstname, lastname, nationalCode);
-        this.type = type;
+        this.type = CustomerType.NORMAL;
     }
 
     public CustomerType getType() {
