@@ -6,10 +6,7 @@ import entity.enums.product.ProductType;
 import entity.enums.product.tv.DisplayType;
 import entity.product.Product;
 import entity.product.Tv;
-import service.PersonServiceImpl;
-import service.ProductServiceImpl;
-import service.SellerServiceImpl;
-import service.TvServiceImpl;
+import service.*;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -19,6 +16,7 @@ public class SellerMethods {
     private final Scanner scanner = new Scanner(System.in);
     private final SellerServiceImpl sellerService = new SellerServiceImpl();
     private final TvServiceImpl tvService = new TvServiceImpl();
+    private final RadioServiceImpl radioService = new RadioServiceImpl();
 
     public void signup() {
         PersonServiceImpl personService = new PersonServiceImpl();
@@ -80,14 +78,25 @@ public class SellerMethods {
         int quantity = scanner.nextInt();
         Product product = productService.save(new Product(ProductType.ELECTRONIC_APPLIANCES, seller.getCompany()
                 , description, quantity, price), seller.getId());
-        if (Objects.equals(type, "tv")) {
+        if (Objects.equals(type.toLowerCase(), "tv")) {
             System.out.print("Enter inch: ");
             int inch = scanner.nextInt();
             System.out.print("Enter display type: ");
             String display = scanner.next().toUpperCase();
             tvService.save(inch, DisplayType.valueOf(display), product.getId());
+        } else if (Objects.equals(type.toLowerCase(), "radio")) {
+            boolean cdPlayer, cassettePlayer, flashPlayer;
+            System.out.print("Is cd player? (yes or no): ");
+            String isCdPlayer = scanner.next();
+            System.out.print("Is cassette player? (yes or no): ");
+            String isCassettePlayer = scanner.next();
+            System.out.print("Is flash player? (yes or no): ");
+            String isFlashPlayer = scanner.next();
+            cdPlayer = isCdPlayer.toLowerCase().equals("yes");
+            cassettePlayer = isCassettePlayer.toLowerCase().equals("yes");
+            flashPlayer = isFlashPlayer.toLowerCase().equals("yes");
+            radioService.save(cdPlayer, cassettePlayer, flashPlayer, product.getId());
         }
-
     }
 
 }
