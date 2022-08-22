@@ -59,7 +59,7 @@ public class PersonRepositoryImpl{
             return null;
         Person person = new Person(resultSet.getString("firstname"),resultSet.getString("lastname"),
                 resultSet.getString("national_code"));
-        person.setId(resultSet.getLong("id"));
+        person.setPersonId(resultSet.getLong("id"));
         return person;
     }
 }

@@ -2,8 +2,9 @@ package entity.product;
 
 import entity.enums.product.ProductType;
 
-public abstract class Product {
+public class Product {
 
+    private int id;
     private ProductType productType;
     private String sellerName;
     private String description;
@@ -56,5 +57,13 @@ public abstract class Product {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

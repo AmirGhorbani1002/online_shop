@@ -2,7 +2,7 @@ package entity;
 
 public class Person {
 
-    private long id;
+    private long personId;
     private String firstname;
     private String lastname;
     private String nationalCode;
@@ -37,11 +37,11 @@ public class Person {
         this.nationalCode = nationalCode;
     }
 
-    public long getId() {
-        return id;
+    public long getPersonId() {
+        return personId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setPersonId(long personId) {
+        this.personId = personId;
     }
 }

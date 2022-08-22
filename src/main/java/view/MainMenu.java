@@ -1,5 +1,9 @@
 package view;
 
+import view.admin.AdminMethods;
+import view.customer.CustomerMethods;
+import view.seller.SellerMethods;
+
 import java.util.Objects;
 import java.util.Scanner;
 

@@ -15,10 +15,10 @@ public class SellerRepositoryImpl {
 
     private final PersonServiceImpl personService = new PersonServiceImpl();
 
-    public void save(String username, String password, ProductType type, long id) {
+    public void save(String username, String password, ProductType type, long id, String company) {
         String query = """
-                    insert into seller(username, password, product_type, person_id)
-                    values (?,?,?,?)
+                    insert into seller(username, password, product_type, person_id, company)
+                    values (?,?,?,?,?)
                 """;
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
@@ -26,6 +26,7 @@ public class SellerRepositoryImpl {
             preparedStatement.setString(2, password);
             preparedStatement.setObject(3, String.valueOf(type), Types.OTHER);
             preparedStatement.setLong(4, id);
+            preparedStatement.setString(5, company);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -45,8 +46,11 @@ public class SellerRepositoryImpl {
             if (!resultSet.next())
                 return null;
             Person person = personService.loadById(resultSet.getLong("person_id"));
-            return new Seller(person.getFirstname(), person.getLastname(), person.getNationalCode(),
-                    ProductType.valueOf(resultSet.getString("product_type")));
+            Seller seller = new Seller(person.getFirstname(), person.getLastname(), person.getNationalCode(),
+                    ProductType.valueOf(resultSet.getString("product_type"))
+                    , resultSet.getString("company"));
+            seller.setId(resultSet.getInt("id"));
+            return seller;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

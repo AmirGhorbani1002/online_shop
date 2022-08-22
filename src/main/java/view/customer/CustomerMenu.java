@@ -1,4 +1,4 @@
-package view;
+package view.customer;
 
 import entity.Admin;
 import entity.Customer;

@@ -8,9 +8,9 @@ public class SellerServiceImpl {
 
     private final SellerRepositoryImpl sellerRepository = new SellerRepositoryImpl();
 
-    public boolean save(String username, String password, ProductType type, long id) {
+    public boolean save(String username, String password, ProductType type, long id,String company) {
         if (load(username, password) == null) {
-            sellerRepository.save(username, password, type, id);
+            sellerRepository.save(username, password, type, id, company);
             return true;
         } else {
             return false;

@@ -1,19 +1,17 @@
-package view;
+package view.customer;
 
 import entity.Customer;
 import entity.Person;
-import entity.Seller;
-import entity.enums.product.ProductType;
+import service.CustomerServiceImpl;
 import service.PersonServiceImpl;
-import service.SellerServiceImpl;
 
 import java.util.Objects;
 import java.util.Scanner;
 
-public class SellerMethods {
+public class CustomerMethods {
 
     private final Scanner scanner = new Scanner(System.in);
-    private final SellerServiceImpl sellerService = new SellerServiceImpl();
+    private final CustomerServiceImpl customerService = new CustomerServiceImpl();
     private final PersonServiceImpl personService = new PersonServiceImpl();
 
     public void signup() {
@@ -29,8 +27,6 @@ public class SellerMethods {
         Person person = personService.loadByNationalCode(nationalCode);
         System.out.print("Enter your username: ");
         String username = scanner.next();
-        System.out.print("Enter your product type: ");
-        ProductType type = ProductType.valueOf(scanner.next().toUpperCase());
         String password;
         while (true) {
             System.out.print("Enter your password: ");
@@ -40,9 +36,9 @@ public class SellerMethods {
             if (Objects.equals(password, againPassword))
                 break;
         }
-        if (sellerService.save(username, password,type, person.getId())) {
-            SellerMenu sellerMenu = new SellerMenu();
-            sellerMenu.showMenu(sellerService.load(username, password));
+        if (customerService.save(username, password, person.getPersonId())) {
+            CustomerMenu customerMenu = new CustomerMenu();
+            customerMenu.showMenu(customerService.load(username, password));
         }
     }
 
@@ -51,10 +47,10 @@ public class SellerMethods {
         String username = scanner.next();
         System.out.print("Enter password: ");
         String password = scanner.next();
-        Seller seller = sellerService.load(username, password);
-        if (seller != null) {
-            SellerMenu sellerMenu = new SellerMenu();
-            sellerMenu.showMenu(seller);
+        Customer customer = customerService.load(username, password);
+        if (customer != null) {
+            CustomerMenu customerMenu = new CustomerMenu();
+            customerMenu.showMenu(customer);
         } else {
             System.out.println("This username was not found with this password");
         }
