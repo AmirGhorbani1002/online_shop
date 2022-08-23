@@ -3,13 +3,16 @@ package view.seller;
 import entity.Person;
 import entity.Seller;
 import entity.enums.product.ProductType;
+import entity.enums.product.book.BookSubject;
+import entity.enums.product.book.BookType;
+import entity.enums.product.shoes.Color;
+import entity.enums.product.shoes.ShoesType;
 import entity.enums.product.tv.DisplayType;
 import entity.product.Product;
 import entity.product.Tv;
 import service.*;
 
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class SellerMethods {
 
@@ -17,6 +20,8 @@ public class SellerMethods {
     private final SellerServiceImpl sellerService = new SellerServiceImpl();
     private final TvServiceImpl tvService = new TvServiceImpl();
     private final RadioServiceImpl radioService = new RadioServiceImpl();
+    private final BookServiceImpl bookService = new BookServiceImpl();
+    private final ShoesServiceImpl shoesService = new ShoesServiceImpl();
 
     public void signup() {
         PersonServiceImpl personService = new PersonServiceImpl();
@@ -69,6 +74,83 @@ public class SellerMethods {
         ProductServiceImpl productService = new ProductServiceImpl();
         System.out.println("Which item? (for now we have tv and radio): ");
         String type = scanner.next();
+        Product product = saveProduct(seller, productService);
+        if (Objects.equals(type.toLowerCase(), "tv")) {
+            saveTv(product);
+        } else if (Objects.equals(type.toLowerCase(), "radio")) {
+            saveRadio(product);
+        }
+    }
+
+    public void addReadable(Seller seller) {
+        ProductServiceImpl productService = new ProductServiceImpl();
+        Product product = saveProduct(seller, productService);
+        saveBook();
+    }
+
+    public void addShoes(Seller seller) {
+        ProductServiceImpl productService = new ProductServiceImpl();
+        Product product = saveProduct(seller, productService);
+        saveShoes(product);
+    }
+
+    private void saveShoes(Product product) {
+        System.out.print("Enter shoes type (for now we have formal and sport and slippers): ");
+        String type = scanner.next().toUpperCase();
+        System.out.print("Enter main color of shoes ( for now we have blue, red, yellow, black, white, purple): ");
+        String color = scanner.next().toUpperCase();
+        int[] temp = new int[1000];
+        int index = 0;
+        while (true) {
+            System.out.print("Enter size of shoes (Enter 0 if end) : ");
+            int size = scanner.nextInt();
+            if (size == 0)
+                break;
+            temp[index++] = size;
+        }
+        int[] sizes = new int[index];
+        System.arraycopy(temp, 0, sizes, 0, index);
+        shoesService.save(sizes, Color.valueOf(color), ShoesType.valueOf(type), product.getId());
+    }
+
+    private void saveBook() {
+        System.out.print("Enter book type ( for now we have book and magazine): ");
+        String type = scanner.next().toUpperCase();
+        System.out.print("Enter book subject ( for now we have action, adventure, comic, " +
+                "horror, fantasy, historical_fiction): ");
+        String subject = scanner.next().toUpperCase();
+        System.out.print("Enter author name: ");
+        String authorName = scanner.nextLine();
+        System.out.print("Enter publisher name: ");
+        String publisherName = scanner.nextLine();
+        System.out.print("Enter number of pages");
+        int number = scanner.nextInt();
+        bookService.save(BookType.valueOf(type), BookSubject.valueOf(subject), number, authorName, publisherName);
+    }
+
+    private void saveRadio(Product product) {
+        boolean cdPlayer, cassettePlayer, flashPlayer;
+        System.out.print("Is cd player? (yes or no): ");
+        String isCdPlayer = scanner.next();
+        System.out.print("Is cassette player? (yes or no): ");
+        String isCassettePlayer = scanner.next();
+        System.out.print("Is flash player? (yes or no): ");
+        String isFlashPlayer = scanner.next();
+        cdPlayer = isCdPlayer.equalsIgnoreCase("yes");
+        cassettePlayer = isCassettePlayer.equalsIgnoreCase("yes");
+        flashPlayer = isFlashPlayer.equalsIgnoreCase("yes");
+        radioService.save(cdPlayer, cassettePlayer, flashPlayer, product.getId());
+    }
+
+    private void saveTv(Product product) {
+        System.out.print("Enter inch: ");
+        int inch = scanner.nextInt();
+        System.out.print("Enter display type: ");
+        String display = scanner.next().toUpperCase();
+        tvService.save(inch, DisplayType.valueOf(display), product.getId());
+    }
+
+    private Product saveProduct(Seller seller, ProductServiceImpl productService) {
         System.out.print("Enter description: ");
         scanner.nextLine();
         String description = scanner.nextLine();
@@ -76,27 +158,8 @@ public class SellerMethods {
         float price = scanner.nextFloat();
         System.out.print("Enter quantity: ");
         int quantity = scanner.nextInt();
-        Product product = productService.save(new Product(ProductType.ELECTRONIC_APPLIANCES, seller.getCompany()
+        return productService.save(new Product(ProductType.ELECTRONIC_APPLIANCES, seller.getCompany()
                 , description, quantity, price), seller.getId());
-        if (Objects.equals(type.toLowerCase(), "tv")) {
-            System.out.print("Enter inch: ");
-            int inch = scanner.nextInt();
-            System.out.print("Enter display type: ");
-            String display = scanner.next().toUpperCase();
-            tvService.save(inch, DisplayType.valueOf(display), product.getId());
-        } else if (Objects.equals(type.toLowerCase(), "radio")) {
-            boolean cdPlayer, cassettePlayer, flashPlayer;
-            System.out.print("Is cd player? (yes or no): ");
-            String isCdPlayer = scanner.next();
-            System.out.print("Is cassette player? (yes or no): ");
-            String isCassettePlayer = scanner.next();
-            System.out.print("Is flash player? (yes or no): ");
-            String isFlashPlayer = scanner.next();
-            cdPlayer = isCdPlayer.toLowerCase().equals("yes");
-            cassettePlayer = isCassettePlayer.toLowerCase().equals("yes");
-            flashPlayer = isFlashPlayer.toLowerCase().equals("yes");
-            radioService.save(cdPlayer, cassettePlayer, flashPlayer, product.getId());
-        }
     }
 
 }
