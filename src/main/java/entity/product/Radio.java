@@ -8,9 +8,9 @@ public class Radio extends Product {
     private boolean isCassettePlayer;
     private boolean isFlashPlayer;
 
-    public Radio(String sellerName, String description,
+    public Radio(int sellerId, String description,
                  int quantity, float price, boolean isCdPlayer, boolean isCassettePlayer, boolean isFlashPlayer) {
-        super(ProductType.ELECTRONIC_APPLIANCES, sellerName, description, quantity, price);
+        super(ProductType.ELECTRONIC_APPLIANCES, sellerId, description, quantity, price);
         this.isCdPlayer = isCdPlayer;
         this.isCassettePlayer = isCassettePlayer;
         this.isFlashPlayer = isFlashPlayer;
@@ -38,5 +38,13 @@ public class Radio extends Product {
 
     public void setFlashPlayer(boolean flashPlayer) {
         isFlashPlayer = flashPlayer;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "isCdPlayer=" + isCdPlayer +
+                ", isCassettePlayer=" + isCassettePlayer +
+                ", isFlashPlayer=" + isFlashPlayer;
     }
 }

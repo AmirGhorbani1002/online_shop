@@ -24,6 +24,8 @@ public class SellerMenu {
             } else if (seller.getProductType() == ProductType.SHOES) {
                 sellerMethods.addShoes(seller);
             }
+        } else if(Objects.equals(command[0], "show")){
+            sellerMethods.showProductsInformation(seller);
         }
     }
 

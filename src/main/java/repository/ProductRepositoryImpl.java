@@ -1,24 +1,27 @@
 package repository;
 
 import config.DBConfig;
+import entity.enums.product.ProductType;
 import entity.product.Product;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductRepositoryImpl {
 
-    public Product save(Product product, int id){
+    public Product save(Product product, int id) {
         String query = """
                     insert into product(product_type, price, description, seller_id, quantity)
                     values (?,?,?,?,?)
                 """;
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setObject(1,product.getProductType(), Types.OTHER);
-            preparedStatement.setFloat(2,product.getPrice());
-            preparedStatement.setString(3,product.getDescription());
-            preparedStatement.setInt(4,id);
-            preparedStatement.setInt(5,product.getQuantity());
+            preparedStatement.setObject(1, product.getProductType(), Types.OTHER);
+            preparedStatement.setFloat(2, product.getPrice());
+            preparedStatement.setString(3, product.getDescription());
+            preparedStatement.setInt(4, id);
+            preparedStatement.setInt(5, product.getQuantity());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();

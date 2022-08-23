@@ -6,14 +6,14 @@ public class Product {
 
     private int id;
     private ProductType productType;
-    private String sellerName;
+    private int sellerId;
     private String description;
     private int quantity;
     private float price;
 
-    public Product(ProductType productType, String sellerName, String description, int quantity, float price) {
+    public Product(ProductType productType, int sellerId, String description, int quantity, float price) {
         this.productType = productType;
-        this.sellerName = sellerName;
+        this.sellerId = sellerId;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
@@ -27,12 +27,12 @@ public class Product {
         this.productType = productType;
     }
 
-    public String getSellerName() {
-        return sellerName;
+    public int getSellerId() {
+        return sellerId;
     }
 
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
+    public void setSellerId(int sellerId) {
+        this.sellerId = sellerId;
     }
 
     public String getDescription() {
@@ -65,5 +65,17 @@ public class Product {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", productType=" + productType +
+                ", sellerId=" + sellerId +
+                ", description='" + description + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
     }
 }

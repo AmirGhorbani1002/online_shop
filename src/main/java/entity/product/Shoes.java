@@ -13,8 +13,8 @@ public class Shoes extends Product {
     private ShoesType type;
     private Color mainColor;
 
-    public Shoes(String sellerName, String description, int quantity, float price, int size, ShoesType type, Color mainColor) {
-        super(ProductType.SHOES, sellerName, description, quantity, price);
+    public Shoes(int sellerId, String description, int quantity, float price, ShoesType type, Color mainColor) {
+        super(ProductType.SHOES, sellerId, description, quantity, price);
         this.type = type;
         this.mainColor = mainColor;
     }
@@ -33,5 +33,17 @@ public class Shoes extends Product {
 
     public void setMainColor(Color mainColor) {
         this.mainColor = mainColor;
+    }
+
+    public List<Integer> getSizes() {
+        return sizes;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "sizes=" + sizes +
+                ", type=" + type +
+                ", mainColor=" + mainColor;
     }
 }

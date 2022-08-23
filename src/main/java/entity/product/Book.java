@@ -12,9 +12,9 @@ public class Book extends Product {
     private String authorName;
     private String publisherName;
 
-    public Book(String sellerName, String description, int quantity, float price,
+    public Book(int sellerId, String description, int quantity, float price,
                 BookType type, BookSubject subject, int numberOfPages, String authorName, String publisherName) {
-        super(ProductType.READABLE, sellerName, description, quantity, price);
+        super(ProductType.READABLE, sellerId, description, quantity, price);
         this.type = type;
         this.subject = subject;
         this.numberOfPages = numberOfPages;
@@ -60,5 +60,15 @@ public class Book extends Product {
 
     public void setPublisherName(String publisherName) {
         this.publisherName = publisherName;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "type=" + type +
+                ", subject=" + subject +
+                ", numberOfPages=" + numberOfPages +
+                ", authorName='" + authorName + '\'' +
+                ", publisherName='" + publisherName + '\'';
     }
 }
