@@ -1,4 +1,4 @@
-package repository;
+package repository.person;
 
 import config.DBConfig;
 import entity.Person;

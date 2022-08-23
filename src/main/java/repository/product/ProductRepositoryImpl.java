@@ -1,12 +1,9 @@
-package repository;
+package repository.product;
 
 import config.DBConfig;
-import entity.enums.product.ProductType;
 import entity.product.Product;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProductRepositoryImpl {
 

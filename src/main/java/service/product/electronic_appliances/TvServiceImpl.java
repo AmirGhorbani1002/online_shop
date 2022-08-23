@@ -1,8 +1,8 @@
-package service.electronic_appliances;
+package service.product.electronic_appliances;
 
 import entity.enums.product.tv.DisplayType;
 import entity.product.Tv;
-import repository.electronic_appliances.TvRepositoryImpl;
+import repository.product.electronic_appliances.TvRepositoryImpl;
 
 import java.util.List;
 
@@ -14,8 +14,12 @@ public class TvServiceImpl {
         tvRepository.save(inch, displayType, id);
     }
 
-    public List<Tv> load(int sellerId) {
-        return tvRepository.load(sellerId);
+    public List<Tv> loadAllForSeller(int sellerId) {
+        return tvRepository.loadAllForSeller(sellerId);
+    }
+
+    public List<Tv> loadAllForCustomer() {
+        return tvRepository.loadAllForCustomer();
     }
 
 }

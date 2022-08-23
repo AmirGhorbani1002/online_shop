@@ -1,8 +1,7 @@
-package repository.electronic_appliances;
+package repository.product.electronic_appliances;
 
 import config.DBConfig;
 import entity.enums.product.tv.DisplayType;
-import entity.product.Product;
 import entity.product.Tv;
 
 import java.sql.PreparedStatement;
@@ -30,7 +29,7 @@ public class TvRepositoryImpl {
         }
     }
 
-    public List<Tv> load(int sellerId) {
+    public List<Tv> loadAllForSeller(int sellerId) {
         List<Tv> tvs = new ArrayList<>();
         String query = """
                     select * from tv
@@ -40,19 +39,37 @@ public class TvRepositoryImpl {
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
             preparedStatement.setInt(1, sellerId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Tv tv = new Tv(resultSet.getInt("seller_id"), resultSet.getString("description"),
-                        resultSet.getInt("quantity"), resultSet.getFloat("price"),
-                        resultSet.getInt("inch"),
-                        DisplayType.valueOf(resultSet.getString("display_type")));
-                tv.setId(resultSet.getInt("product_id"));
-                tvs.add(tv);
-            }
-            return tvs;
+            return getTvs(tvs, preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Tv> loadAllForCustomer() {
+        List<Tv> tvs = new ArrayList<>();
+        String query = """
+                    select * from tv
+                    inner join product p on p.id = tv.product_id
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            return getTvs(tvs, preparedStatement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Tv> getTvs(List<Tv> tvs, PreparedStatement preparedStatement) throws SQLException {
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            Tv tv = new Tv(resultSet.getInt("seller_id"), resultSet.getString("description"),
+                    resultSet.getInt("quantity"), resultSet.getFloat("price"),
+                    resultSet.getInt("inch"),
+                    DisplayType.valueOf(resultSet.getString("display_type")));
+            tv.setId(resultSet.getInt("product_id"));
+            tvs.add(tv);
+        }
+        return tvs;
     }
 
 }

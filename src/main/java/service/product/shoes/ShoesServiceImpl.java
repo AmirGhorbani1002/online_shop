@@ -1,9 +1,9 @@
-package service.shoes;
+package service.product.shoes;
 
 import entity.enums.product.shoes.Color;
 import entity.enums.product.shoes.ShoesType;
 import entity.product.Shoes;
-import repository.shoes.ShoesRepositoryImpl;
+import repository.product.shoes.ShoesRepositoryImpl;
 
 import java.util.List;
 
@@ -15,8 +15,12 @@ public class ShoesServiceImpl {
         shoesRepository.save(sizes, color, type, id);
     }
 
-    public List<Shoes> load(int sellerId){
-        return shoesRepository.load(sellerId);
+    public List<Shoes> loadAllForSeller(int sellerId) {
+        return shoesRepository.loadAllForSeller(sellerId);
+    }
+
+    public List<Shoes> loadAllForCustomer() {
+        return shoesRepository.loadAllForCustomer();
     }
 
 }

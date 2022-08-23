@@ -1,7 +1,7 @@
-package service;
+package service.person;
 
 import entity.Person;
-import repository.PersonRepositoryImpl;
+import repository.person.PersonRepositoryImpl;
 
 public class PersonServiceImpl {
 

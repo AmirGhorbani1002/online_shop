@@ -1,4 +1,4 @@
-package repository.readable;
+package repository.product.readable;
 
 import config.DBConfig;
 import entity.enums.product.book.BookSubject;
@@ -33,7 +33,7 @@ public class BookRepositoryImpl {
         }
     }
 
-    public List<Book> load(int sellerId) {
+    public List<Book> loadForSeller(int sellerId) {
         List<Book> books = new ArrayList<>();
         String query = """
                     select * from book
@@ -43,21 +43,40 @@ public class BookRepositoryImpl {
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
             preparedStatement.setInt(1, sellerId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Book book = new Book(resultSet.getInt("seller_id"),
-                        resultSet.getString("description"), resultSet.getInt("quantity"),
-                        resultSet.getFloat("price"),
-                        BookType.valueOf(resultSet.getString("book_type")),
-                        BookSubject.valueOf(resultSet.getString("book_subject")),
-                        resultSet.getInt("number_of_pages"),resultSet.getString("author_name"),
-                        resultSet.getString("publisherName"));
-                book.setId(resultSet.getInt("product_id"));
-            }
-            return books;
+            return getBooks(books, preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Book> loadAllForCustomer() {
+        List<Book> books = new ArrayList<>();
+        String query = """
+                    select * from book
+                    inner join product p on p.id = book.product_id
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            return getBooks(books, preparedStatement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Book> getBooks(List<Book> books, PreparedStatement preparedStatement) throws SQLException {
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            Book book = new Book(resultSet.getInt("seller_id"),
+                    resultSet.getString("description"), resultSet.getInt("quantity"),
+                    resultSet.getFloat("price"),
+                    BookType.valueOf(resultSet.getString("book_type")),
+                    BookSubject.valueOf(resultSet.getString("book_subject")),
+                    resultSet.getInt("number_of_pages"),resultSet.getString("author_name"),
+                    resultSet.getString("publisher_name"));
+            book.setId(resultSet.getInt("product_id"));
+            books.add(book);
+        }
+        return books;
     }
 
 }

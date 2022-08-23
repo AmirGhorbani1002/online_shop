@@ -1,9 +1,9 @@
-package repository;
+package repository.person;
 
 import config.DBConfig;
 import entity.Admin;
 import entity.Person;
-import service.PersonServiceImpl;
+import service.person.PersonServiceImpl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

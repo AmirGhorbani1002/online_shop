@@ -2,8 +2,8 @@ package view.customer;
 
 import entity.Customer;
 import entity.Person;
-import service.CustomerServiceImpl;
-import service.PersonServiceImpl;
+import service.person.CustomerServiceImpl;
+import service.person.PersonServiceImpl;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -54,6 +54,26 @@ public class CustomerMethods {
         } else {
             System.out.println("This username was not found with this password");
         }
+    }
+
+    public void showBooks(){
+        System.out.println("This is our books");
+        customerService.loadBooks();
+    }
+
+    public void showTvs(){
+        System.out.println("This is our tvs");
+        customerService.loadTvs();
+    }
+
+    public void showRadios(){
+        System.out.println("This is our radios");
+        customerService.loadRadios();
+    }
+
+    public void showShoes(){
+        System.out.println("This is our shoes");
+        customerService.loadShoes();
     }
 
 }

@@ -9,11 +9,13 @@ import entity.enums.product.shoes.Color;
 import entity.enums.product.shoes.ShoesType;
 import entity.enums.product.tv.DisplayType;
 import entity.product.*;
-import service.*;
-import service.electronic_appliances.RadioServiceImpl;
-import service.electronic_appliances.TvServiceImpl;
-import service.readable.BookServiceImpl;
-import service.shoes.ShoesServiceImpl;
+import service.product.ProductServiceImpl;
+import service.product.electronic_appliances.RadioServiceImpl;
+import service.product.electronic_appliances.TvServiceImpl;
+import service.person.PersonServiceImpl;
+import service.person.SellerServiceImpl;
+import service.product.readable.BookServiceImpl;
+import service.product.shoes.ShoesServiceImpl;
 
 import java.util.*;
 
@@ -77,7 +79,7 @@ public class SellerMethods {
         ProductServiceImpl productService = new ProductServiceImpl();
         System.out.println("Which item? (for now we have tv and radio): ");
         String type = scanner.next();
-        Product product = saveProduct(seller, productService);
+        Product product = saveProduct(seller, productService, ProductType.ELECTRONIC_APPLIANCES);
         if (Objects.equals(type.toLowerCase(), "tv")) {
             saveTv(product);
         } else if (Objects.equals(type.toLowerCase(), "radio")) {
@@ -87,20 +89,20 @@ public class SellerMethods {
 
     public void addReadable(Seller seller) {
         ProductServiceImpl productService = new ProductServiceImpl();
-        Product product = saveProduct(seller, productService);
+        Product product = saveProduct(seller, productService, ProductType.READABLE);
         saveBook(product);
     }
 
     public void addShoes(Seller seller) {
         ProductServiceImpl productService = new ProductServiceImpl();
-        Product product = saveProduct(seller, productService);
+        Product product = saveProduct(seller, productService, ProductType.SHOES);
         saveShoes(product);
     }
 
     public void showProductsInformation(Seller seller) {
         if (seller.getProductType() == ProductType.ELECTRONIC_APPLIANCES) {
-            List<Tv> tvs = tvService.load(seller.getId());
-            List<Radio> radios = radioService.load(seller.getId());
+            List<Tv> tvs = tvService.loadAllForSeller(seller.getId());
+            List<Radio> radios = radioService.loadAllForSeller(seller.getId());
             for (Tv tv : tvs) {
                 System.out.println(tv);
             }
@@ -108,13 +110,13 @@ public class SellerMethods {
                 System.out.println(radio);
             }
         } else if (seller.getProductType() == ProductType.READABLE) {
-            List<Book> books = bookService.load(seller.getId());
+            List<Book> books = bookService.loadForSeller(seller.getId());
             for (Book book : books) {
                 System.out.println(book);
             }
-        } else if(seller.getProductType() == ProductType.SHOES){
-            List<Shoes> shoesList = shoesService.load(seller.getId());
-            for(Shoes shoes: shoesList){
+        } else if (seller.getProductType() == ProductType.SHOES) {
+            List<Shoes> shoesList = shoesService.loadAllForSeller(seller.getId());
+            for (Shoes shoes : shoesList) {
                 System.out.println(shoes);
             }
         }
@@ -145,6 +147,7 @@ public class SellerMethods {
         System.out.print("Enter book subject ( for now we have action, adventure, comic, " +
                 "horror, fantasy, historical_fiction): ");
         String subject = scanner.next().toUpperCase();
+        scanner.nextLine();
         System.out.print("Enter author name: ");
         String authorName = scanner.nextLine();
         System.out.print("Enter publisher name: ");
@@ -177,7 +180,7 @@ public class SellerMethods {
         tvService.save(inch, DisplayType.valueOf(display), product.getId());
     }
 
-    private Product saveProduct(Seller seller, ProductServiceImpl productService) {
+    private Product saveProduct(Seller seller, ProductServiceImpl productService, ProductType productType) {
         System.out.print("Enter description: ");
         scanner.nextLine();
         String description = scanner.nextLine();
@@ -185,7 +188,7 @@ public class SellerMethods {
         float price = scanner.nextFloat();
         System.out.print("Enter quantity: ");
         int quantity = scanner.nextInt();
-        return productService.save(new Product(ProductType.ELECTRONIC_APPLIANCES, seller.getId()
+        return productService.save(new Product(productType, seller.getId()
                 , description, quantity, price), seller.getId());
     }
 

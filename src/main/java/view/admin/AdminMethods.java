@@ -1,7 +1,7 @@
 package view.admin;
 
 import entity.Admin;
-import service.AdminServiceImpl;
+import service.person.AdminServiceImpl;
 
 import java.util.Scanner;
 

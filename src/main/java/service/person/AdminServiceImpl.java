@@ -1,7 +1,7 @@
-package service;
+package service.person;
 
 import entity.Admin;
-import repository.AdminRepositoryImpl;
+import repository.person.AdminRepositoryImpl;
 
 public class AdminServiceImpl {
 

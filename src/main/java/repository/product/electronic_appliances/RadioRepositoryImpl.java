@@ -1,4 +1,4 @@
-package repository.electronic_appliances;
+package repository.product.electronic_appliances;
 
 import config.DBConfig;
 import entity.product.Radio;
@@ -28,7 +28,7 @@ public class RadioRepositoryImpl {
         }
     }
 
-    public List<Radio> load(int sellerId) {
+    public List<Radio> loadAllForSeller(int sellerId) {
         List<Radio> radios = new ArrayList<>();
         String query = """
                      select * from radio
@@ -38,20 +38,39 @@ public class RadioRepositoryImpl {
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
             preparedStatement.setInt(1, sellerId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Radio radio = new Radio(resultSet.getInt("seller_id"),
-                        resultSet.getString("description"), resultSet.getInt("quantity"),
-                        resultSet.getFloat("price"), resultSet.getBoolean("is_cd_player"),
-                        resultSet.getBoolean("is_cassette_player"),
-                        resultSet.getBoolean("is_flash_player"));
-                radio.setId(resultSet.getInt("product_id"));
-                radios.add(radio);
-            }
-            return radios;
+            return getRadios(radios, preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Radio> loadAllForCustomer() {
+        List<Radio> radios = new ArrayList<>();
+        String query = """
+                     select * from radio
+                     inner join product p on p.id = radio.product_id
+                     where seller_id = ?
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            return getRadios(radios, preparedStatement);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Radio> getRadios(List<Radio> radios, PreparedStatement preparedStatement) throws SQLException {
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            Radio radio = new Radio(resultSet.getInt("seller_id"),
+                    resultSet.getString("description"), resultSet.getInt("quantity"),
+                    resultSet.getFloat("price"), resultSet.getBoolean("is_cd_player"),
+                    resultSet.getBoolean("is_cassette_player"),
+                    resultSet.getBoolean("is_flash_player"));
+            radio.setId(resultSet.getInt("product_id"));
+            radios.add(radio);
+        }
+        return radios;
     }
 
 }

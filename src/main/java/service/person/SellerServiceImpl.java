@@ -1,8 +1,8 @@
-package service;
+package service.person;
 
 import entity.Seller;
 import entity.enums.product.ProductType;
-import repository.SellerRepositoryImpl;
+import repository.person.SellerRepositoryImpl;
 
 public class SellerServiceImpl {
 

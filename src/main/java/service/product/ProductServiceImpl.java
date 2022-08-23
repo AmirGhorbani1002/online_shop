@@ -1,7 +1,7 @@
-package service;
+package service.product;
 
 import entity.product.Product;
-import repository.ProductRepositoryImpl;
+import repository.product.ProductRepositoryImpl;
 
 public class ProductServiceImpl {
 

@@ -13,7 +13,7 @@ public class DBConfig {
     public static Connection getConnection(){
         if(connection == null) {
             try {
-                connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/","postgres","@MIRr@9137#!");
+                connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/online_shop","postgres","@MIRr@9137#!");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

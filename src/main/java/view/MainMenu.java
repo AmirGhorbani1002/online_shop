@@ -14,7 +14,7 @@ public class MainMenu {
     public void showMenu() {
         while (true) {
             System.out.println("Welcome to online shop!!!");
-            System.out.print("Enter your command (Enter help for get information about commands: ");
+            System.out.print("Enter your command (Enter help for get information about commands): ");
             String[] command = scanner.nextLine().split(" ");
             if (Objects.equals(command[0], "help") && command.length == 1) {
                 helpMenu();
