@@ -60,6 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void addBookToCart(int productId, int quantity, long customerId, Cart cart) {
         Book book = bookService.load(productId);
         book.setQuantity(quantity);
+        book.setPrice(book.getPrice() * quantity);
         cart.getProducts().add(book);
         float price = quantity * book.getPrice();
         cartService.saveProduct(productId, cart.getId(), quantity, price);
@@ -69,6 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void addTvToCart(int productId, int quantity, long customerId, Cart cart) {
         Tv tv = tvService.load(productId);
         tv.setQuantity(quantity);
+        tv.setPrice(tv.getPrice() * quantity);
         cart.getProducts().add(tv);
         float price = quantity * tv.getPrice();
         cartService.saveProduct(productId, cart.getId(), quantity, price);
@@ -78,6 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void addRadioToCart(int productId, int quantity, long customerId, Cart cart) {
         Radio radio = radioService.load(productId);
         radio.setQuantity(quantity);
+        radio.setPrice(radio.getPrice() * quantity);
         cart.getProducts().add(radio);
         float price = quantity * radio.getPrice();
         cartService.saveProduct(productId, cart.getId(), quantity, price);
@@ -87,6 +90,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void addShoesToCart(int productId, int quantity, long customerId, Cart cart, int size) {
         Shoes shoes = shoesService.load(productId);
         shoes.setQuantity(quantity);
+        shoes.setPrice(shoes.getPrice() * quantity);
         if (shoes.getSizes().contains(size)) {
             cart.getProducts().add(shoes);
             float price = quantity * shoes.getPrice();

@@ -9,6 +9,7 @@ import service.cart.CartServiceImpl;
 import service.person.CustomerServiceImpl;
 import service.person.PersonServiceImpl;
 import service.product.ProductServiceImpl;
+import view.cart.CartMenu;
 
 import java.util.List;
 import java.util.Objects;
@@ -100,47 +101,13 @@ public class CustomerMethods {
         addShoesToCart(productId, customerId, cart);
     }
 
-    public void showAll() {
-        /*showBooks();
-        showTvs();
-        showRadios();
-        showShoes();*/
-    }
-
     public void showCart(Cart cart) {
-        int index = 0;
-        for (Product product : cart.getProducts())
-            System.out.println(++index + ") " + product);
-        System.out.print("Enter your command (Enter help for get information about commands): ");
-        String[] command = scanner.nextLine().split(" ");
-        if (command[0].equalsIgnoreCase("delete")) {
-            int i = check.checkInt(command[1], true);
-            if (i > cart.getProducts().size()) {
-                System.out.println("This id was not found");
+            CartMenu cartMenu = new CartMenu();
+            if(cart.getProducts().size() == 0){
+                System.out.println("Your cart is empty");
                 return;
             }
-            cartService.deleteProductFromCart(cart.getProducts().get(Integer.parseInt(command[1]) - 1).getId()
-                    , cart.getId());
-        } else if (command[0].equalsIgnoreCase("paid")) {
-            ProductServiceImpl productService = new ProductServiceImpl();
-            int quantity;
-            for (Product product : cart.getProducts()) {
-                quantity = productService.loaProductQuantity(product.getId());
-                if (quantity < product.getQuantity()) {
-                    System.out.println("for product with id " + product.getId() + " We are out of stock!!! You are late." +
-                            " we delete it for you from your cart");
-                    cartService.deleteProductFromCart(product.getId(), cart.getId());
-                    continue;
-                }
-                productService.update(product.getId(), quantity - product.getQuantity());
-            }
-            cartService.update(cart.getId());
-        } else if (command[0].equalsIgnoreCase("price")) {
-            float price = 0;
-            for (Product product : cart.getProducts())
-                price += product.getPrice();
-            System.out.println(price);
-        }
+            cartMenu.showMenu(cart);
     }
 
     private void loadProductsForCustomerCart(Cart cart) {
