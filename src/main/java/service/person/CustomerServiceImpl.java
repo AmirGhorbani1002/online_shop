@@ -79,6 +79,10 @@ public class CustomerServiceImpl {
     public boolean checkExistProduct(int productId, String type) {
         if (Objects.equals(type, "book")) {
             return bookService.load(productId) != null;
+        } else if(Objects.equals(type, "tv")){
+            return tvService.load(productId) != null;
+        } else if(Objects.equals(type, "radio")){
+            return radioService.load(productId) != null;
         } else return true;
     }
 

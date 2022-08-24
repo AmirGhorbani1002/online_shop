@@ -34,6 +34,24 @@ public class CartRepositoryImpl {
         }
     }
 
+    public void saveProduct(int productId, long cartId, int quantity, float price) {
+        String query = """
+                    insert into cart_products(product_id, cart_id, description, quantity, price)
+                    values (?,?,?,?,?)
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, productId);
+            preparedStatement.setLong(2, cartId);
+            preparedStatement.setString(3, "hello");
+            preparedStatement.setInt(4, quantity);
+            preparedStatement.setFloat(5, price);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Cart loadPending(long customerId) {
         String query = """
                     select * from cart
@@ -143,18 +161,15 @@ public class CartRepositoryImpl {
         }
     }
 
-    public void saveProduct(int productId, long cartId, int quantity, float price) {
+    public void deleteProductFromCart(int productId, long cartId) {
         String query = """
-                    insert into cart_products(product_id, cart_id, description, quantity, price)
-                    values (?,?,?,?,?)
+                    delete from cart_products
+                    where product_id = ? and cart_id = ?
                 """;
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
             preparedStatement.setInt(1, productId);
             preparedStatement.setLong(2, cartId);
-            preparedStatement.setString(3, "hello");
-            preparedStatement.setInt(4, quantity);
-            preparedStatement.setFloat(5, price);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

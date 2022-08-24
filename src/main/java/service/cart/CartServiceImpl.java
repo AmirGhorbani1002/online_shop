@@ -16,12 +16,12 @@ public class CartServiceImpl {
         cartRepository.save(customerId);
     }
 
-    public Cart loadPending(long customerId){
-        return cartRepository.loadPending(customerId);
-    }
-
     public void saveProduct(int productId, long cartId, int quantity, float price){
         cartRepository.saveProduct(productId, cartId, quantity, price);
+    }
+
+    public Cart loadPending(long customerId){
+        return cartRepository.loadPending(customerId);
     }
 
     public List<Book> loadBookForCart(long cartId){
@@ -34,6 +34,10 @@ public class CartServiceImpl {
 
     public List<Radio> loadRadioForCart(long cartId){
         return cartRepository.loadRadioForCart(cartId);
+    }
+
+    public void deleteProductFromCart(int productId, long cartId){
+        cartRepository.deleteProductFromCart(productId, cartId);
     }
 
 }

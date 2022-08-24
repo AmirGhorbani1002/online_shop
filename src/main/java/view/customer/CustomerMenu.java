@@ -20,7 +20,7 @@ public class CustomerMenu {
                 if(Objects.equals(command[1].toLowerCase(), "all")){
                     customerMethods.showAll();
                 } else if(Objects.equals(command[1].toLowerCase(), "cart")){
-
+                    customerMethods.showCart(cart);
                 } else if(Objects.equals(command[1].toLowerCase(), "book")){
                     customerMethods.showBooks(customer.getId(),cart);
                 } else if(Objects.equals(command[1].toLowerCase(), "tv")){
