@@ -29,4 +29,16 @@ public class ProductRepositoryImpl {
         }
     }
 
+    /*public Product load(int id){
+        String query = """
+                    select * from pr
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
+
 }

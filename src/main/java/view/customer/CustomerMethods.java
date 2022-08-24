@@ -1,10 +1,16 @@
 package view.customer;
 
+import entity.Cart;
 import entity.Customer;
 import entity.Person;
+import entity.product.Book;
+import entity.product.Radio;
+import entity.product.Tv;
+import service.cart.CartServiceImpl;
 import service.person.CustomerServiceImpl;
 import service.person.PersonServiceImpl;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -13,6 +19,7 @@ public class CustomerMethods {
     private final Scanner scanner = new Scanner(System.in);
     private final CustomerServiceImpl customerService = new CustomerServiceImpl();
     private final PersonServiceImpl personService = new PersonServiceImpl();
+    private final CartServiceImpl cartService = new CartServiceImpl();
 
     public void signup() {
         System.out.print("Enter your national code: ");
@@ -38,7 +45,7 @@ public class CustomerMethods {
         }
         if (customerService.save(username, password, person.getPersonId())) {
             CustomerMenu customerMenu = new CustomerMenu();
-            customerMenu.showMenu(customerService.load(username, password));
+            //customerMenu.showMenu(customerService.load(username, password));
         }
     }
 
@@ -50,30 +57,86 @@ public class CustomerMethods {
         Customer customer = customerService.load(username, password);
         if (customer != null) {
             CustomerMenu customerMenu = new CustomerMenu();
-            customerMenu.showMenu(customer);
+            Cart cart = cartService.loadPending(customer.getId());
+            if (cart == null) {
+                cartService.save(customer.getId());
+                cart = cartService.loadPending(customer.getId());
+            } else {
+                loadProductsForCustomerCart(cart);
+            }
+            customerMenu.showMenu(customer, cart);
         } else {
             System.out.println("This username was not found with this password");
         }
     }
 
-    public void showBooks(){
+    public void showBooks(long customerId, Cart cart) {
         System.out.println("This is our books");
         customerService.loadBooks();
+        System.out.print("Enter the ID of the product you want: ");
+        int productId = scanner.nextInt();
+        addBookToCart(productId, customerId, cart);
     }
 
-    public void showTvs(){
+    public void showTvs(long customerId, Cart cart) {
         System.out.println("This is our tvs");
         customerService.loadTvs();
+        System.out.print("Enter the ID of the product you want: ");
+        int productId = scanner.nextInt();
+        addTvToCart(productId, customerId, cart);
     }
 
-    public void showRadios(){
+    public void showRadios(long customerId, Cart cart) {
         System.out.println("This is our radios");
         customerService.loadRadios();
+        System.out.print("Enter the ID of the product you want: ");
+        int productId = scanner.nextInt();
+        addRadioToCart(productId, customerId, cart);
     }
 
-    public void showShoes(){
+    public void showShoes() {
         System.out.println("This is our shoes");
         customerService.loadShoes();
+    }
+
+    public void showAll() {
+        /*showBooks();
+        showTvs();
+        showRadios();
+        showShoes();*/
+    }
+
+    private void loadProductsForCustomerCart(Cart cart) {
+        List<Book> books = cartService.loadBookForCart(cart.getId());
+        List<Tv> tvs = cartService.loadTvForCart(cart.getId());
+        List<Radio> radios = cartService.loadRadioForCart(cart.getId());
+        cart.getProducts().addAll(0, books);
+        cart.getProducts().addAll(0, tvs);
+        cart.getProducts().addAll(0, radios);
+    }
+
+    private void addBookToCart(int productId, long customerId, Cart cart) {
+        if (customerService.checkExistProduct(productId, "book")) {
+            System.out.print("How much do you want? ");
+            int quantity = scanner.nextInt();
+            customerService.addBookToCart(productId, quantity, customerId, cart);
+        }
+    }
+
+    private void addTvToCart(int productId, long customerId, Cart cart) {
+        if (customerService.checkExistProduct(productId, "tv")) {
+            System.out.print("How much do you want? ");
+            int quantity = scanner.nextInt();
+            customerService.addTvToCart(productId, quantity, customerId, cart);
+        }
+    }
+
+    private void addRadioToCart(int productId, long customerId, Cart cart) {
+        if (customerService.checkExistProduct(productId, "tv")) {
+            System.out.print("How much do you want? ");
+            int quantity = scanner.nextInt();
+            customerService.addRadioToCart(productId, quantity, customerId, cart);
+        }
     }
 
 }

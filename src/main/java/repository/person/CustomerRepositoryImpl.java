@@ -45,7 +45,9 @@ public class CustomerRepositoryImpl {
             if (!resultSet.next())
                 return null;
             Person person = personService.loadById(resultSet.getLong("person_id"));
-            return new Customer(person.getFirstname(), person.getLastname(), person.getNationalCode());
+            Customer customer = new Customer(person.getFirstname(), person.getLastname(), person.getNationalCode());
+            customer.setId(resultSet.getInt("id"));
+            return customer;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

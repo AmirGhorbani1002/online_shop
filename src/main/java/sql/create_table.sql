@@ -5,6 +5,7 @@ CREATE TYPE ShoesType AS ENUM ('SPORT', 'FORMAL', 'SLIPPERS');
 CREATE TYPE BookType AS ENUM ('BOOK', 'MAGAZINE');
 CREATE TYPE BookSubject AS ENUM ('ACTION', 'ADVENTURE', 'COMIC','HORROR', 'FANTASY', 'HISTORICAL');
 CREATE TYPE Color AS ENUM ('BLUE', 'RED', 'PURPLE','YELLOW', 'BLACK', 'WHITE');
+CREATE TYPE CartStatus AS ENUM ('PAID', 'UNPAID', 'CANCEL');
 
 create table if not exists person
 (
@@ -17,8 +18,8 @@ create table if not exists person
 create table if not exists admin
 (
     id        bigserial primary key not null,
-    username      varchar(20) unique    not null,
-    password      varchar(30)           not null,
+    username  varchar(20) unique    not null,
+    password  varchar(30)           not null,
     person_id int8 references Person (id)
 );
 
@@ -34,10 +35,10 @@ create table if not exists customer
 create table if not exists seller
 (
     id           bigserial primary key not null,
-    username      varchar(20) unique    not null,
-    password      varchar(30)           not null,
+    username     varchar(20) unique    not null,
+    password     varchar(30)           not null,
     product_type ProductType           not null,
-    company varchar(255) not null,
+    company      varchar(255)          not null,
     person_id    int8 references Person (id)
 );
 
@@ -70,13 +71,13 @@ create table if not exists radio
 
 create table if not exists book
 (
-    id             serial primary key not null,
-    book_type      BookType           not null,
-    book_subject   BookSubject        not null,
-    number_of_pages int not null,
-    author_name    varchar(255)       not null,
-    publisher_name varchar(255)       not null,
-    product_id     int references product (id)
+    id              serial primary key not null,
+    book_type       BookType           not null,
+    book_subject    BookSubject        not null,
+    number_of_pages int                not null,
+    author_name     varchar(255)       not null,
+    publisher_name  varchar(255)       not null,
+    product_id      int references product (id)
 );
 
 create table if not exists shoes
@@ -84,6 +85,22 @@ create table if not exists shoes
     id         serial primary key not null,
     size       int[]              not null,
     main_color Color              not null,
-    type ShoesType not null,
+    type       ShoesType          not null,
     product_id int references product (id)
+);
+
+create table if not exists cart
+(
+    id bigserial primary key not null ,
+    customer_id int references customer(id),
+    cart_status CartStatus not null
+);
+
+create table if not exists cart_products
+(
+    id bigserial primary key not null ,
+    product_id int references product(id),
+    cart_id int8 references cart(id),
+    quantity int not null,
+    description text not null
 );

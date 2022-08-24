@@ -15,6 +15,10 @@ public class BookServiceImpl {
         bookRepository.save(type, subject, numberOfPages, authorName, publisherName, id);
     }
 
+    public Book load(int productId){
+        return bookRepository.load(productId);
+    }
+
     public List<Book> loadForSeller(int sellerId) {
         return bookRepository.loadForSeller(sellerId);
     }

@@ -14,6 +14,10 @@ public class TvServiceImpl {
         tvRepository.save(inch, displayType, id);
     }
 
+    public Tv load(int productId) {
+        return tvRepository.load(productId);
+    }
+
     public List<Tv> loadAllForSeller(int sellerId) {
         return tvRepository.loadAllForSeller(sellerId);
     }

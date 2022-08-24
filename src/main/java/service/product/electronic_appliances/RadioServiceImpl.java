@@ -13,6 +13,10 @@ public class RadioServiceImpl {
         radioRepository.save(cdPlayer, cassettePlayer, flashPlayer, id);
     }
 
+    public Radio load(int productId){
+        return radioRepository.load(productId);
+    }
+
     public List<Radio> loadAllForSeller(int sellerId) {
         return radioRepository.loadAllForSeller(sellerId);
     }

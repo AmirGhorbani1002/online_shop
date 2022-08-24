@@ -28,6 +28,24 @@ public class RadioRepositoryImpl {
         }
     }
 
+    public Radio load(int productId){
+        String query = """
+                    select * from radio
+                    inner join product p on p.id = radio.product_id
+                    where product_id = ?
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, productId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next())
+                return null;
+            return getRadio(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Radio> loadAllForSeller(int sellerId) {
         List<Radio> radios = new ArrayList<>();
         String query = """
@@ -59,16 +77,19 @@ public class RadioRepositoryImpl {
         }
     }
 
+    private Radio getRadio(ResultSet resultSet) throws SQLException {
+        Radio radio = new Radio(resultSet.getInt("seller_id"),
+                resultSet.getString("description"), resultSet.getInt("quantity"),
+                resultSet.getFloat("price"), resultSet.getBoolean("is_cd_player"),
+                resultSet.getBoolean("is_cassette_player"),
+                resultSet.getBoolean("is_flash_player"));
+        radio.setId(resultSet.getInt("product_id"));
+        return radio;
+    }
     private List<Radio> getRadios(List<Radio> radios, PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            Radio radio = new Radio(resultSet.getInt("seller_id"),
-                    resultSet.getString("description"), resultSet.getInt("quantity"),
-                    resultSet.getFloat("price"), resultSet.getBoolean("is_cd_player"),
-                    resultSet.getBoolean("is_cassette_player"),
-                    resultSet.getBoolean("is_flash_player"));
-            radio.setId(resultSet.getInt("product_id"));
-            radios.add(radio);
+            radios.add(getRadio(resultSet));
         }
         return radios;
     }

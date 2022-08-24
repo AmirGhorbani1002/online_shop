@@ -29,6 +29,24 @@ public class TvRepositoryImpl {
         }
     }
 
+    public Tv load(int productId) {
+        String query = """
+                    select * from tv
+                    inner join product p on p.id = tv.product_id
+                    where product_id = ?
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, productId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next())
+                return null;
+            return getTv(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Tv> loadAllForSeller(int sellerId) {
         List<Tv> tvs = new ArrayList<>();
         String query = """
@@ -59,15 +77,19 @@ public class TvRepositoryImpl {
         }
     }
 
+    private Tv getTv(ResultSet resultSet) throws SQLException {
+        Tv tv = new Tv(resultSet.getInt("seller_id"), resultSet.getString("description"),
+                resultSet.getInt("quantity"), resultSet.getFloat("price"),
+                resultSet.getInt("inch"),
+                DisplayType.valueOf(resultSet.getString("display_type")));
+        tv.setId(resultSet.getInt("product_id"));
+        return tv;
+    }
+
     private List<Tv> getTvs(List<Tv> tvs, PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            Tv tv = new Tv(resultSet.getInt("seller_id"), resultSet.getString("description"),
-                    resultSet.getInt("quantity"), resultSet.getFloat("price"),
-                    resultSet.getInt("inch"),
-                    DisplayType.valueOf(resultSet.getString("display_type")));
-            tv.setId(resultSet.getInt("product_id"));
-            tvs.add(tv);
+            tvs.add(getTv(resultSet));
         }
         return tvs;
     }

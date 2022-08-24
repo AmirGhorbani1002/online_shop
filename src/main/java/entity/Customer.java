@@ -4,6 +4,7 @@ import entity.enums.CustomerType;
 
 public class Customer extends Person {
 
+    private long id;
     private CustomerType type;
 
     public Customer(String firstname, String lastname, String nationalCode) {
@@ -17,5 +18,13 @@ public class Customer extends Person {
 
     public void setType(CustomerType type) {
         this.type = type;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
