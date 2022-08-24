@@ -4,6 +4,7 @@ import entity.Cart;
 import entity.Customer;
 import entity.product.Book;
 import entity.product.Radio;
+import entity.product.Shoes;
 import entity.product.Tv;
 import repository.person.CustomerRepositoryImpl;
 import service.cart.CartServiceImpl;
@@ -76,12 +77,25 @@ public class CustomerServiceImpl {
         cartService.saveProduct(productId, cart.getId(), quantity, price);
     }
 
+    public void addShoesToCart(int productId, int quantity, long customerId, Cart cart, int size) {
+        Shoes shoes = shoesService.load(productId);
+        shoes.setQuantity(quantity);
+        if (shoes.getSizes().contains(size)) {
+            cart.getProducts().add(shoes);
+            float price = quantity * shoes.getPrice();
+            long cart_product_id = cartService.saveProduct(productId, cart.getId(), quantity, price);
+            cartService.saveShoesSize(size, cart_product_id);
+        } else {
+            System.out.println("Wrong size");
+        }
+    }
+
     public boolean checkExistProduct(int productId, String type) {
         if (Objects.equals(type, "book")) {
             return bookService.load(productId) != null;
-        } else if(Objects.equals(type, "tv")){
+        } else if (Objects.equals(type, "tv")) {
             return tvService.load(productId) != null;
-        } else if(Objects.equals(type, "radio")){
+        } else if (Objects.equals(type, "radio")) {
             return radioService.load(productId) != null;
         } else return true;
     }

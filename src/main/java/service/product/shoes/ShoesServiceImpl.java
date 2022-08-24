@@ -15,6 +15,10 @@ public class ShoesServiceImpl {
         shoesRepository.save(sizes, color, type, id);
     }
 
+    public Shoes load(int productId){
+        return shoesRepository.load(productId);
+    }
+
     public List<Shoes> loadAllForSeller(int sellerId) {
         return shoesRepository.loadAllForSeller(sellerId);
     }

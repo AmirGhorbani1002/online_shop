@@ -3,10 +3,7 @@ package view.customer;
 import entity.Cart;
 import entity.Customer;
 import entity.Person;
-import entity.product.Book;
-import entity.product.Product;
-import entity.product.Radio;
-import entity.product.Tv;
+import entity.product.*;
 import service.cart.CartServiceImpl;
 import service.person.CustomerServiceImpl;
 import service.person.PersonServiceImpl;
@@ -95,9 +92,12 @@ public class CustomerMethods {
         addRadioToCart(productId, customerId, cart);
     }
 
-    public void showShoes() {
+    public void showShoes(long customerId, Cart cart) {
         System.out.println("This is our shoes");
         customerService.loadShoes();
+        System.out.print("Enter the ID of the product you want: ");
+        int productId = scanner.nextInt();
+        addShoesToCart(productId, customerId, cart);
     }
 
     public void showAll() {
@@ -123,9 +123,11 @@ public class CustomerMethods {
         List<Book> books = cartService.loadBookForCart(cart.getId());
         List<Tv> tvs = cartService.loadTvForCart(cart.getId());
         List<Radio> radios = cartService.loadRadioForCart(cart.getId());
+        List<Shoes> shoesList = cartService.loadShoesForCart(cart.getId());
         cart.getProducts().addAll(0, books);
         cart.getProducts().addAll(0, tvs);
         cart.getProducts().addAll(0, radios);
+        cart.getProducts().addAll(0, shoesList);
     }
 
     private void addBookToCart(int productId, long customerId, Cart cart) {
@@ -161,10 +163,26 @@ public class CustomerMethods {
             System.out.println("Your cart is full");
             return;
         }
-        if (customerService.checkExistProduct(productId, "tv")) {
+        if (customerService.checkExistProduct(productId, "radio")) {
             System.out.print("How much do you want? ");
             int quantity = scanner.nextInt();
             customerService.addRadioToCart(productId, quantity, customerId, cart);
+        } else {
+            System.out.println("There is no product with this id");
+        }
+    }
+
+    private void addShoesToCart(int productId, long customerId, Cart cart) {
+        if (cart.getProducts().size() == 5) {
+            System.out.println("Your cart is full");
+            return;
+        }
+        if (customerService.checkExistProduct(productId, "shoes")) {
+            System.out.print("How much do you want? ");
+            int quantity = scanner.nextInt();
+            System.out.print("what size?  ");
+            int size = scanner.nextInt();
+            customerService.addShoesToCart(productId, quantity, customerId, cart,size);
         } else {
             System.out.println("There is no product with this id");
         }

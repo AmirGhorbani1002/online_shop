@@ -28,7 +28,7 @@ public class CustomerMenu {
                 } else if(Objects.equals(command[1].toLowerCase(), "radio")){
                     customerMethods.showRadios(customer.getId(),cart);
                 } else if(Objects.equals(command[1].toLowerCase(), "shoes")){
-                    customerMethods.showShoes();
+                    customerMethods.showShoes(customer.getId(),cart);
                 }
             } else if(Objects.equals(command[0].toLowerCase(), "exit")){
                 break;

@@ -29,6 +29,24 @@ public class ShoesRepositoryImpl {
         }
     }
 
+    public Shoes load(int productId){
+        String query = """
+                    select * from shoes
+                    inner join product p on p.id = shoes.product_id
+                    where product_id = ?
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, productId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(!resultSet.next())
+                return null;
+            return getShoes(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Shoes> loadAllForSeller(int sellerId) {
         List<Shoes> shoesList = new ArrayList<>();
         String query = """
@@ -39,7 +57,7 @@ public class ShoesRepositoryImpl {
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
             preparedStatement.setInt(1, sellerId);
-            return getShoes(shoesList, preparedStatement);
+            return getShoesList(shoesList, preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -50,29 +68,32 @@ public class ShoesRepositoryImpl {
         String query = """
                     select * from shoes
                     inner join product p on p.id = shoes.product_id
-                    where seller_id = ?
                 """;
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
-            return getShoes(shoesList, preparedStatement);
+            return getShoesList(shoesList, preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private List<Shoes> getShoes(List<Shoes> shoesList, PreparedStatement preparedStatement) throws SQLException {
+    private Shoes getShoes(ResultSet resultSet) throws SQLException {
+        Array ints = resultSet.getArray("size");
+        List<Integer> sizes = new ArrayList<>(Arrays.asList((Integer[]) ints.getArray()));
+        Shoes shoes = new Shoes(resultSet.getInt("seller_id"),
+                resultSet.getString("description"), resultSet.getInt("quantity"),
+                resultSet.getFloat("price"),
+                ShoesType.valueOf(resultSet.getString("type")),
+                Color.valueOf(resultSet.getString("main_color")));
+        shoes.getSizes().addAll(0,sizes);
+        shoes.setId(resultSet.getInt("product_id"));
+        return shoes;
+    }
+
+    private List<Shoes> getShoesList(List<Shoes> shoesList, PreparedStatement preparedStatement) throws SQLException {
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            Array ints = resultSet.getArray("size");
-            List<Integer> sizes = new ArrayList<>(Arrays.asList((Integer[]) ints.getArray()));
-            Shoes shoes = new Shoes(resultSet.getInt("seller_id"),
-                    resultSet.getString("description"), resultSet.getInt("quantity"),
-                    resultSet.getFloat("price"),
-                    ShoesType.valueOf(resultSet.getString("type")),
-                    Color.valueOf(resultSet.getString("main_color")));
-            shoes.getSizes().addAll(0,sizes);
-            shoes.setId(resultSet.getInt("product_id"));
-            shoesList.add(shoes);
+            shoesList.add(getShoes(resultSet));
         }
         return shoesList;
     }

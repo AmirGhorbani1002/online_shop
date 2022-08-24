@@ -102,5 +102,13 @@ create table if not exists cart_products
     product_id int references product(id),
     cart_id int8 references cart(id),
     quantity int not null,
-    description text not null
+    description text not null,
+    price float not null
+);
+
+create table if not exists choose_size_shoes
+(
+    id bigserial primary key not null,
+    size int not null,
+    cart_products_id int8 references cart_products(id)
 );

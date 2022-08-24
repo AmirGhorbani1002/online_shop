@@ -5,15 +5,15 @@ import entity.Cart;
 import entity.enums.CartStatus;
 import entity.enums.product.book.BookSubject;
 import entity.enums.product.book.BookType;
+import entity.enums.product.shoes.Color;
+import entity.enums.product.shoes.ShoesType;
 import entity.enums.product.tv.DisplayType;
 import entity.product.Book;
 import entity.product.Radio;
+import entity.product.Shoes;
 import entity.product.Tv;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,18 +34,36 @@ public class CartRepositoryImpl {
         }
     }
 
-    public void saveProduct(int productId, long cartId, int quantity, float price) {
+    public long saveProduct(int productId, long cartId, int quantity, float price) {
         String query = """
                     insert into cart_products(product_id, cart_id, description, quantity, price)
                     values (?,?,?,?,?)
                 """;
         try {
-            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, productId);
             preparedStatement.setLong(2, cartId);
             preparedStatement.setString(3, "hello");
             preparedStatement.setInt(4, quantity);
             preparedStatement.setFloat(5, price);
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            resultSet.next();
+            return resultSet.getLong("id");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveShoesSize(int size, long cart_products_id){
+        String query = """
+                    insert into choose_size_shoes(size, cart_products_id)
+                    values (?,?)
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setInt(1,size);
+            preparedStatement.setLong(2,cart_products_id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -156,6 +174,37 @@ public class CartRepositoryImpl {
                 radios.add(radio);
             }
             return radios;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Shoes> loadShoesForCart(long cartId){
+        List<Shoes> shoesList = new ArrayList<>();
+        String query = """
+                    select * from choose_size_shoes
+                    inner join cart_products cp on cp.id = choose_size_shoes.cart_products_id
+                    inner join cart c on c.id = cp.cart_id
+                    inner join product p on p.id = cp.product_id
+                    inner join shoes s on p.id = s.product_id
+                    where cart_id = ? and cart_status = ?
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setLong(1, cartId);
+            preparedStatement.setObject(2, CartStatus.UNPAID, Types.OTHER);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Shoes shoes = new Shoes(resultSet.getInt("seller_id"),
+                        resultSet.getString("description"), resultSet.getInt(8),
+                        resultSet.getFloat(9),
+                        ShoesType.valueOf(resultSet.getString("type")),
+                        Color.valueOf(resultSet.getString("main_color")));
+                shoes.getSizes().add(resultSet.getInt(2));
+                shoes.setId(resultSet.getInt("product_id"));
+                shoesList.add(shoes);
+            }
+            return shoesList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
