@@ -2,6 +2,8 @@ package repository.product.electronic_appliances;
 
 import config.DBConfig;
 import entity.product.Radio;
+import repository.product.base_interfaces.Loading;
+import repository.product.electronic_appliances.interfaces.RadioRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,8 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RadioRepositoryImpl {
+public class RadioRepositoryImpl implements Loading<Radio>, RadioRepository {
 
+    @Override
     public void save(boolean cdPlayer, boolean cassettePlayer, boolean flashPlayer, int id) {
         String query = """
                     insert into radio(is_cd_player, is_cassette_player, is_flash_player, product_id)
@@ -28,6 +31,7 @@ public class RadioRepositoryImpl {
         }
     }
 
+    @Override
     public Radio load(int productId){
         String query = """
                     select * from radio
@@ -46,6 +50,7 @@ public class RadioRepositoryImpl {
         }
     }
 
+    @Override
     public List<Radio> loadAllForSeller(int sellerId) {
         List<Radio> radios = new ArrayList<>();
         String query = """
@@ -62,6 +67,7 @@ public class RadioRepositoryImpl {
         }
     }
 
+    @Override
     public List<Radio> loadAllForCustomer() {
         List<Radio> radios = new ArrayList<>();
         String query = """

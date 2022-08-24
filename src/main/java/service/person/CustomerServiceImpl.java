@@ -8,6 +8,7 @@ import entity.product.Shoes;
 import entity.product.Tv;
 import repository.person.CustomerRepositoryImpl;
 import service.cart.CartServiceImpl;
+import service.person.interfaces.CustomerService;
 import service.product.electronic_appliances.RadioServiceImpl;
 import service.product.electronic_appliances.TvServiceImpl;
 import service.product.readable.BookServiceImpl;
@@ -15,7 +16,7 @@ import service.product.shoes.ShoesServiceImpl;
 
 import java.util.Objects;
 
-public class CustomerServiceImpl {
+public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
     private final BookServiceImpl bookService = new BookServiceImpl();
@@ -24,35 +25,38 @@ public class CustomerServiceImpl {
     private final RadioServiceImpl radioService = new RadioServiceImpl();
     private final CartServiceImpl cartService = new CartServiceImpl();
 
-    public boolean save(String username, String password, long id) {
+    public void save(String username, String password, long id) {
         if (load(username, password) == null) {
             customerRepository.save(username, password, id);
-            return true;
-        } else {
-            return false;
         }
     }
 
+    @Override
     public Customer load(String username, String password) {
         return customerRepository.load(username, password);
     }
 
+    @Override
     public void loadBooks() {
         System.out.println(bookService.loadAllForCustomer());
     }
 
+    @Override
     public void loadShoes() {
         System.out.println(shoesService.loadAllForCustomer());
     }
 
+    @Override
     public void loadTvs() {
         System.out.println(tvService.loadAllForCustomer());
     }
 
+    @Override
     public void loadRadios() {
         System.out.println(radioService.loadAllForCustomer());
     }
 
+    @Override
     public void addBookToCart(int productId, int quantity, long customerId, Cart cart) {
         Book book = bookService.load(productId);
         book.setQuantity(quantity);
@@ -61,6 +65,7 @@ public class CustomerServiceImpl {
         cartService.saveProduct(productId, cart.getId(), quantity, price);
     }
 
+    @Override
     public void addTvToCart(int productId, int quantity, long customerId, Cart cart) {
         Tv tv = tvService.load(productId);
         tv.setQuantity(quantity);
@@ -69,6 +74,7 @@ public class CustomerServiceImpl {
         cartService.saveProduct(productId, cart.getId(), quantity, price);
     }
 
+    @Override
     public void addRadioToCart(int productId, int quantity, long customerId, Cart cart) {
         Radio radio = radioService.load(productId);
         radio.setQuantity(quantity);
@@ -77,6 +83,7 @@ public class CustomerServiceImpl {
         cartService.saveProduct(productId, cart.getId(), quantity, price);
     }
 
+    @Override
     public void addShoesToCart(int productId, int quantity, long customerId, Cart cart, int size) {
         Shoes shoes = shoesService.load(productId);
         shoes.setQuantity(quantity);
@@ -90,15 +97,20 @@ public class CustomerServiceImpl {
         }
     }
 
-    public boolean checkExistProduct(int productId, String type) {
+    @Override
+    public int checkExistProduct(int productId, String type) {
         if (Objects.equals(type, "book")) {
-            return bookService.load(productId) != null;
+            if(bookService.load(productId) == null)
+                return 0;
+            return bookService.load(productId).getQuantity();
         } else if (Objects.equals(type, "tv")) {
-            return tvService.load(productId) != null;
+            if(tvService.load(productId) == null)
+                return 0;
+            return tvService.load(productId).getQuantity();
         } else if (Objects.equals(type, "radio")) {
-            return radioService.load(productId) != null;
-        } else return true;
+            if(radioService.load(productId) == null)
+                return 0;
+            return radioService.load(productId).getQuantity();
+        } else return 0;
     }
-
-
 }

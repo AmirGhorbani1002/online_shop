@@ -1,5 +1,6 @@
 package view.customer;
 
+import check.Check;
 import entity.Cart;
 import entity.Customer;
 import entity.Person;
@@ -19,6 +20,7 @@ public class CustomerMethods {
     private final CustomerServiceImpl customerService = new CustomerServiceImpl();
     private final PersonServiceImpl personService = new PersonServiceImpl();
     private final CartServiceImpl cartService = new CartServiceImpl();
+    private final Check check = new Check();
 
     public void signup() {
         System.out.print("Enter your national code: ");
@@ -42,10 +44,7 @@ public class CustomerMethods {
             if (Objects.equals(password, againPassword))
                 break;
         }
-        if (customerService.save(username, password, person.getPersonId())) {
-            CustomerMenu customerMenu = new CustomerMenu();
-            //customerMenu.showMenu(customerService.load(username, password));
-        }
+        customerService.save(username, password, person.getPersonId());
     }
 
     public void login() {
@@ -115,6 +114,11 @@ public class CustomerMethods {
         System.out.print("Enter your command (Enter help for get information about commands): ");
         String[] command = scanner.nextLine().split(" ");
         if (command[0].equalsIgnoreCase("delete")) {
+            int i = check.checkInt(command[1], true);
+            if (i > cart.getProducts().size()) {
+                System.out.println("This id was not found");
+                return;
+            }
             cartService.deleteProductFromCart(cart.getProducts().get(Integer.parseInt(command[1]) - 1).getId()
                     , cart.getId());
         } else if (command[0].equalsIgnoreCase("paid")) {
@@ -131,6 +135,11 @@ public class CustomerMethods {
                 productService.update(product.getId(), quantity - product.getQuantity());
             }
             cartService.update(cart.getId());
+        } else if (command[0].equalsIgnoreCase("price")) {
+            float price = 0;
+            for (Product product : cart.getProducts())
+                price += product.getPrice();
+            System.out.println(price);
         }
     }
 
@@ -150,9 +159,14 @@ public class CustomerMethods {
             System.out.println("Your cart is full");
             return;
         }
-        if (customerService.checkExistProduct(productId, "book")) {
+        int number = customerService.checkExistProduct(productId, "book");
+        if (number != 0) {
             System.out.print("How much do you want? ");
-            int quantity = scanner.nextInt();
+            int quantity = check.checkInt(scanner.next(), true);
+            if (quantity > number) {
+                System.out.println("We don't have that much");
+                return;
+            }
             customerService.addBookToCart(productId, quantity, customerId, cart);
         } else {
             System.out.println("There is no product with this id");
@@ -164,9 +178,14 @@ public class CustomerMethods {
             System.out.println("Your cart is full");
             return;
         }
-        if (customerService.checkExistProduct(productId, "tv")) {
+        int number = customerService.checkExistProduct(productId, "tv");
+        if (number != 0) {
             System.out.print("How much do you want? ");
             int quantity = scanner.nextInt();
+            if (quantity > number) {
+                System.out.println("We don't have that much");
+                return;
+            }
             customerService.addTvToCart(productId, quantity, customerId, cart);
         } else {
             System.out.println("There is no product with this id");
@@ -178,9 +197,14 @@ public class CustomerMethods {
             System.out.println("Your cart is full");
             return;
         }
-        if (customerService.checkExistProduct(productId, "radio")) {
+        int number = customerService.checkExistProduct(productId, "radio");
+        if (number != 0) {
             System.out.print("How much do you want? ");
             int quantity = scanner.nextInt();
+            if (quantity > number) {
+                System.out.println("We don't have that much");
+                return;
+            }
             customerService.addRadioToCart(productId, quantity, customerId, cart);
         } else {
             System.out.println("There is no product with this id");
@@ -192,11 +216,16 @@ public class CustomerMethods {
             System.out.println("Your cart is full");
             return;
         }
-        if (customerService.checkExistProduct(productId, "shoes")) {
+        int number = customerService.checkExistProduct(productId, "shoes");
+        if (number != 0) {
             System.out.print("How much do you want? ");
             int quantity = scanner.nextInt();
+            if (quantity > number) {
+                System.out.println("We don't have that much");
+                return;
+            }
             System.out.print("what size?  ");
-            int size = scanner.nextInt();
+            int size = check.checkInt(scanner.next(), true);
             customerService.addShoesToCart(productId, quantity, customerId, cart, size);
         } else {
             System.out.println("There is no product with this id");

@@ -29,6 +29,8 @@ public class SellerMenu {
                 sellerMethods.showProductsInformation(seller);
             } else if(Objects.equals(command[0], "exit")){
                 break;
+            } else{
+                System.out.println("Wrong command");
             }
         }
     }

@@ -4,14 +4,17 @@ import config.DBConfig;
 import entity.enums.product.shoes.Color;
 import entity.enums.product.shoes.ShoesType;
 import entity.product.Shoes;
+import repository.product.base_interfaces.Loading;
+import repository.product.shoes.interfaces.ShoesRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ShoesRepositoryImpl {
+public class ShoesRepositoryImpl implements Loading<Shoes>, ShoesRepository {
 
+    @Override
     public void save(int[] sizes, Color color, ShoesType type, int id) {
         String query = """
                     insert into shoes(size, main_color, product_id, type)
@@ -29,6 +32,7 @@ public class ShoesRepositoryImpl {
         }
     }
 
+    @Override
     public Shoes load(int productId){
         String query = """
                     select * from shoes
@@ -47,6 +51,7 @@ public class ShoesRepositoryImpl {
         }
     }
 
+    @Override
     public List<Shoes> loadAllForSeller(int sellerId) {
         List<Shoes> shoesList = new ArrayList<>();
         String query = """
@@ -63,6 +68,7 @@ public class ShoesRepositoryImpl {
         }
     }
 
+    @Override
     public List<Shoes> loadAllForCustomer() {
         List<Shoes> shoesList = new ArrayList<>();
         String query = """

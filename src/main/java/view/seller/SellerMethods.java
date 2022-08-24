@@ -114,7 +114,7 @@ public class SellerMethods {
                 System.out.println(radio);
             }
         } else if (seller.getProductType() == ProductType.READABLE) {
-            List<Book> books = bookService.loadForSeller(seller.getId());
+            List<Book> books = bookService.loadAllForSeller(seller.getId());
             for (Book book : books) {
                 System.out.println(book);
             }

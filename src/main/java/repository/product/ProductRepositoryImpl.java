@@ -2,11 +2,13 @@ package repository.product;
 
 import config.DBConfig;
 import entity.product.Product;
+import repository.product.base_interfaces.ProductRepository;
 
 import java.sql.*;
 
-public class ProductRepositoryImpl {
+public class ProductRepositoryImpl implements ProductRepository {
 
+    @Override
     public Product save(Product product, int id) {
         String query = """
                     insert into product(product_type, price, description, seller_id, quantity)
@@ -29,6 +31,7 @@ public class ProductRepositoryImpl {
         }
     }
 
+    @Override
     public int loaProductQuantity(long productId) {
         String query = """
                     select quantity from product
@@ -46,6 +49,7 @@ public class ProductRepositoryImpl {
         }
     }
 
+    @Override
     public void update(long productId, int quantity) {
         String query = """
                     update product

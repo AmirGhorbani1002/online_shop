@@ -4,6 +4,7 @@ import config.DBConfig;
 import entity.Person;
 import entity.Seller;
 import entity.enums.product.ProductType;
+import repository.person.interfaces.SellerRepository;
 import service.person.PersonServiceImpl;
 
 import java.sql.PreparedStatement;
@@ -11,10 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-public class SellerRepositoryImpl {
+public class SellerRepositoryImpl implements SellerRepository {
 
     private final PersonServiceImpl personService = new PersonServiceImpl();
 
+    @Override
     public void save(String username, String password, ProductType type, long id, String company) {
         String query = """
                     insert into seller(username, password, product_type, person_id, company)
@@ -33,6 +35,7 @@ public class SellerRepositoryImpl {
         }
     }
 
+    @Override
     public Seller load(String username, String password) {
         String query = """
                     select * from seller

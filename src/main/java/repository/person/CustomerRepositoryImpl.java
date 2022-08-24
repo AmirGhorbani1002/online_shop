@@ -4,6 +4,7 @@ import config.DBConfig;
 import entity.Customer;
 import entity.Person;
 import entity.enums.CustomerType;
+import repository.person.interfaces.CustomerRepository;
 import service.person.PersonServiceImpl;
 
 import java.sql.PreparedStatement;
@@ -11,10 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-public class CustomerRepositoryImpl {
+public class CustomerRepositoryImpl implements CustomerRepository {
 
     private final PersonServiceImpl personService = new PersonServiceImpl();
 
+    @Override
     public void save(String username, String password, long id) {
         String query = """
                     insert into customer(username, password, customer_type, person_id)
@@ -32,6 +34,7 @@ public class CustomerRepositoryImpl {
         }
     }
 
+    @Override
     public Customer load(String username, String password) {
         String query = """
                     select * from customer

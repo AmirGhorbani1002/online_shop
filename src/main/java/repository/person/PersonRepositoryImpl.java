@@ -2,13 +2,15 @@ package repository.person;
 
 import config.DBConfig;
 import entity.Person;
+import repository.person.interfaces.PersonRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PersonRepositoryImpl{
+public class PersonRepositoryImpl implements PersonRepository {
 
+    @Override
     public void save(Person person) {
         String query = """
                     insert into person(firstname, lastname, national_code)
@@ -25,6 +27,7 @@ public class PersonRepositoryImpl{
         }
     }
 
+    @Override
     public Person loadByNationalCode(String nationalCode){
         String query = """
                     select * from person
@@ -39,6 +42,7 @@ public class PersonRepositoryImpl{
         }
     }
 
+    @Override
     public Person loadById(long id){
         String query = """
                     select * from person

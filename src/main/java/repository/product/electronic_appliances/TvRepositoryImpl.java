@@ -3,6 +3,8 @@ package repository.product.electronic_appliances;
 import config.DBConfig;
 import entity.enums.product.tv.DisplayType;
 import entity.product.Tv;
+import repository.product.base_interfaces.Loading;
+import repository.product.electronic_appliances.interfaces.TvRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,8 +13,9 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TvRepositoryImpl {
+public class TvRepositoryImpl implements Loading<Tv>, TvRepository {
 
+    @Override
     public void save(int inch, DisplayType displayType, int id) {
         String query = """
                     insert into tv(display_type, inch, product_id)
@@ -29,6 +32,7 @@ public class TvRepositoryImpl {
         }
     }
 
+    @Override
     public Tv load(int productId) {
         String query = """
                     select * from tv
@@ -47,6 +51,7 @@ public class TvRepositoryImpl {
         }
     }
 
+    @Override
     public List<Tv> loadAllForSeller(int sellerId) {
         List<Tv> tvs = new ArrayList<>();
         String query = """
@@ -63,6 +68,7 @@ public class TvRepositoryImpl {
         }
     }
 
+    @Override
     public List<Tv> loadAllForCustomer() {
         List<Tv> tvs = new ArrayList<>();
         String query = """

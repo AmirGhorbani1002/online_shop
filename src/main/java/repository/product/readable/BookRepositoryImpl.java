@@ -4,13 +4,16 @@ import config.DBConfig;
 import entity.enums.product.book.BookSubject;
 import entity.enums.product.book.BookType;
 import entity.product.Book;
+import repository.product.base_interfaces.Loading;
+import repository.product.readable.interfaces.BookRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookRepositoryImpl {
+public class BookRepositoryImpl implements Loading<Book>, BookRepository {
 
+    @Override
     public void save(BookType type, BookSubject subject, int numberOfPages, String authorName, String publisherName, int id) {
         String query = """
                     insert into book(book_type, book_subject, author_name, publisher_name, product_id, number_of_pages)
@@ -30,6 +33,7 @@ public class BookRepositoryImpl {
         }
     }
 
+    @Override
     public Book load(int productId) {
         String query = """
                     select * from book
@@ -48,7 +52,8 @@ public class BookRepositoryImpl {
         }
     }
 
-    public List<Book> loadForSeller(int sellerId) {
+    @Override
+    public List<Book> loadAllForSeller(int sellerId) {
         List<Book> books = new ArrayList<>();
         String query = """
                     select * from book
@@ -64,6 +69,7 @@ public class BookRepositoryImpl {
         }
     }
 
+    @Override
     public List<Book> loadAllForCustomer() {
         List<Book> books = new ArrayList<>();
         String query = """

@@ -12,13 +12,15 @@ import entity.product.Book;
 import entity.product.Radio;
 import entity.product.Shoes;
 import entity.product.Tv;
+import repository.cart.interfaces.CartRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartRepositoryImpl {
+public class CartRepositoryImpl implements CartRepository {
 
+    @Override
     public void save(long customerId) {
         String query = """
                     insert into cart(customer_id, cart_status)
@@ -34,6 +36,7 @@ public class CartRepositoryImpl {
         }
     }
 
+    @Override
     public long saveProduct(int productId, long cartId, int quantity, float price) {
         String query = """
                     insert into cart_products(product_id, cart_id, description, quantity, price)
@@ -55,6 +58,7 @@ public class CartRepositoryImpl {
         }
     }
 
+    @Override
     public void saveShoesSize(int size, long cart_products_id) {
         String query = """
                     insert into choose_size_shoes(size, cart_products_id)
@@ -69,7 +73,7 @@ public class CartRepositoryImpl {
             throw new RuntimeException(e);
         }
     }
-
+    @Override
     public Cart loadPending(long customerId) {
         String query = """
                     select * from cart
@@ -91,6 +95,7 @@ public class CartRepositoryImpl {
         }
     }
 
+    @Override
     public List<Book> loadBookForCart(long cartId) {
         List<Book> books = new ArrayList<>();
         String query = """
@@ -108,7 +113,7 @@ public class CartRepositoryImpl {
             while (resultSet.next()) {
                 Book book = new Book(resultSet.getInt("seller_id"),
                         resultSet.getString("description"), resultSet.getInt(5),
-                        resultSet.getFloat(6),
+                        resultSet.getFloat(6) ,
                         BookType.valueOf(resultSet.getString("book_type")),
                         BookSubject.valueOf(resultSet.getString("book_subject")),
                         resultSet.getInt("number_of_pages"), resultSet.getString("author_name"),
@@ -122,6 +127,7 @@ public class CartRepositoryImpl {
         }
     }
 
+    @Override
     public List<Tv> loadTvForCart(long cartId) {
         List<Tv> tvs = new ArrayList<>();
         String query = """
@@ -150,6 +156,7 @@ public class CartRepositoryImpl {
         }
     }
 
+    @Override
     public List<Radio> loadRadioForCart(long cartId) {
         List<Radio> radios = new ArrayList<>();
         String query = """
@@ -179,6 +186,7 @@ public class CartRepositoryImpl {
         }
     }
 
+    @Override
     public List<Shoes> loadShoesForCart(long cartId) {
         List<Shoes> shoesList = new ArrayList<>();
         String query = """
@@ -210,6 +218,7 @@ public class CartRepositoryImpl {
         }
     }
 
+    @Override
     public void deleteProductFromCart(int productId, long cartId) {
         String query = """
                     delete from cart_products
@@ -225,6 +234,7 @@ public class CartRepositoryImpl {
         }
     }
 
+    @Override
     public void update(long cartId) {
         String query = """
                     update cart
