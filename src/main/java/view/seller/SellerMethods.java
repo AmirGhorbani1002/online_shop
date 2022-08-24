@@ -1,5 +1,6 @@
 package view.seller;
 
+import check.Check;
 import entity.Person;
 import entity.Seller;
 import entity.enums.product.ProductType;
@@ -27,6 +28,7 @@ public class SellerMethods {
     private final RadioServiceImpl radioService = new RadioServiceImpl();
     private final BookServiceImpl bookService = new BookServiceImpl();
     private final ShoesServiceImpl shoesService = new ShoesServiceImpl();
+    private final Check check = new Check();
 
     public void signup() {
         PersonServiceImpl personService = new PersonServiceImpl();
@@ -84,6 +86,8 @@ public class SellerMethods {
             saveTv(product);
         } else if (Objects.equals(type.toLowerCase(), "radio")) {
             saveRadio(product);
+        } else {
+            System.out.println("Wrong item");
         }
     }
 
@@ -124,14 +128,14 @@ public class SellerMethods {
 
     private void saveShoes(Product product) {
         System.out.print("Enter shoes type (for now we have formal and sport and slippers): ");
-        String type = scanner.next().toUpperCase();
+        String type = check.checkEnums(scanner.next().toUpperCase(), "shoesType");;
         System.out.print("Enter main color of shoes ( for now we have blue, red, yellow, black, white, purple): ");
-        String color = scanner.next().toUpperCase();
+        String color = check.checkEnums(scanner.next().toUpperCase(), "color");
         int[] temp = new int[1000];
         int index = 0;
         while (true) {
             System.out.print("Enter size of shoes (Enter 0 if end) : ");
-            int size = scanner.nextInt();
+            int size = check.checkInt(scanner.next(), false);
             if (size == 0)
                 break;
             temp[index++] = size;
@@ -143,17 +147,17 @@ public class SellerMethods {
 
     private void saveBook(Product product) {
         System.out.print("Enter book type ( for now we have book and magazine): ");
-        String type = scanner.next().toUpperCase();
+        String type = check.checkEnums(scanner.next().toUpperCase(), "bookType");
         System.out.print("Enter book subject ( for now we have action, adventure, comic, " +
                 "horror, fantasy, historical_fiction): ");
-        String subject = scanner.next().toUpperCase();
+        String subject = check.checkEnums(scanner.next().toUpperCase(), "bookSubject");
         scanner.nextLine();
         System.out.print("Enter author name: ");
         String authorName = scanner.nextLine();
         System.out.print("Enter publisher name: ");
         String publisherName = scanner.nextLine();
         System.out.print("Enter number of pages");
-        int number = scanner.nextInt();
+        int number = check.checkInt(scanner.next(), true);
         bookService.save(BookType.valueOf(type), BookSubject.valueOf(subject), number, authorName,
                 publisherName, product.getId());
     }
@@ -161,11 +165,11 @@ public class SellerMethods {
     private void saveRadio(Product product) {
         boolean cdPlayer, cassettePlayer, flashPlayer;
         System.out.print("Is cd player? (yes or no): ");
-        String isCdPlayer = scanner.next();
+        String isCdPlayer = check.checkYesOrNo(scanner.next().toLowerCase());
         System.out.print("Is cassette player? (yes or no): ");
-        String isCassettePlayer = scanner.next();
+        String isCassettePlayer = check.checkYesOrNo(scanner.next().toLowerCase());
         System.out.print("Is flash player? (yes or no): ");
-        String isFlashPlayer = scanner.next();
+        String isFlashPlayer = check.checkYesOrNo(scanner.next().toLowerCase());
         cdPlayer = isCdPlayer.equalsIgnoreCase("yes");
         cassettePlayer = isCassettePlayer.equalsIgnoreCase("yes");
         flashPlayer = isFlashPlayer.equalsIgnoreCase("yes");
@@ -174,9 +178,9 @@ public class SellerMethods {
 
     private void saveTv(Product product) {
         System.out.print("Enter inch: ");
-        int inch = scanner.nextInt();
+        int inch = check.checkInt(scanner.next(), true);
         System.out.print("Enter display type: ");
-        String display = scanner.next().toUpperCase();
+        String display = check.checkEnums(scanner.next().toUpperCase(), "display");
         tvService.save(inch, DisplayType.valueOf(display), product.getId());
     }
 
@@ -185,9 +189,9 @@ public class SellerMethods {
         scanner.nextLine();
         String description = scanner.nextLine();
         System.out.print("Enter price: ");
-        float price = scanner.nextFloat();
+        float price = check.checkFloat(scanner.next());
         System.out.print("Enter quantity: ");
-        int quantity = scanner.nextInt();
+        int quantity = check.checkInt(scanner.next(), true);
         return productService.save(new Product(productType, seller.getId()
                 , description, quantity, price), seller.getId());
     }
