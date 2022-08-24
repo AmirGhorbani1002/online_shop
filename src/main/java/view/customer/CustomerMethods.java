@@ -7,6 +7,7 @@ import entity.product.*;
 import service.cart.CartServiceImpl;
 import service.person.CustomerServiceImpl;
 import service.person.PersonServiceImpl;
+import service.product.ProductServiceImpl;
 
 import java.util.List;
 import java.util.Objects;
@@ -116,6 +117,20 @@ public class CustomerMethods {
         if (command[0].equalsIgnoreCase("delete")) {
             cartService.deleteProductFromCart(cart.getProducts().get(Integer.parseInt(command[1]) - 1).getId()
                     , cart.getId());
+        } else if (command[0].equalsIgnoreCase("paid")) {
+            ProductServiceImpl productService = new ProductServiceImpl();
+            int quantity;
+            for (Product product : cart.getProducts()) {
+                quantity = productService.loaProductQuantity(product.getId());
+                if (quantity < product.getQuantity()) {
+                    System.out.println("for product with id " + product.getId() + " We are out of stock!!! You are late." +
+                            " we delete it for you from your cart");
+                    cartService.deleteProductFromCart(product.getId(), cart.getId());
+                    continue;
+                }
+                productService.update(product.getId(), quantity - product.getQuantity());
+            }
+            cartService.update(cart.getId());
         }
     }
 
@@ -182,7 +197,7 @@ public class CustomerMethods {
             int quantity = scanner.nextInt();
             System.out.print("what size?  ");
             int size = scanner.nextInt();
-            customerService.addShoesToCart(productId, quantity, customerId, cart,size);
+            customerService.addShoesToCart(productId, quantity, customerId, cart, size);
         } else {
             System.out.println("There is no product with this id");
         }

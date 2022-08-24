@@ -55,15 +55,15 @@ public class CartRepositoryImpl {
         }
     }
 
-    public void saveShoesSize(int size, long cart_products_id){
+    public void saveShoesSize(int size, long cart_products_id) {
         String query = """
                     insert into choose_size_shoes(size, cart_products_id)
                     values (?,?)
                 """;
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
-            preparedStatement.setInt(1,size);
-            preparedStatement.setLong(2,cart_products_id);
+            preparedStatement.setInt(1, size);
+            preparedStatement.setLong(2, cart_products_id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -179,7 +179,7 @@ public class CartRepositoryImpl {
         }
     }
 
-    public List<Shoes> loadShoesForCart(long cartId){
+    public List<Shoes> loadShoesForCart(long cartId) {
         List<Shoes> shoesList = new ArrayList<>();
         String query = """
                     select * from choose_size_shoes
@@ -218,6 +218,22 @@ public class CartRepositoryImpl {
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
             preparedStatement.setInt(1, productId);
+            preparedStatement.setLong(2, cartId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void update(long cartId) {
+        String query = """
+                    update cart
+                    set cart_status = ?
+                    where id = ?
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setObject(1, CartStatus.PAID, Types.OTHER);
             preparedStatement.setLong(2, cartId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

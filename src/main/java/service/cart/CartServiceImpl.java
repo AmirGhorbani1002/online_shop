@@ -49,4 +49,8 @@ public class CartServiceImpl {
         cartRepository.deleteProductFromCart(productId, cartId);
     }
 
+    public void update(long cartId){
+        cartRepository.update(cartId);
+    }
+
 }

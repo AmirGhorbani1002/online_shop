@@ -29,16 +29,37 @@ public class ProductRepositoryImpl {
         }
     }
 
-    /*public Product load(int id){
+    public int loaProductQuantity(long productId) {
         String query = """
-                    select * from pr
+                    select quantity from product
+                    where id = ?
                 """;
         try {
-            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setLong(1, productId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(!resultSet.next())
+                return 0;
+            return resultSet.getInt("quantity");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }*/
+    }
+
+    public void update(long productId, int quantity) {
+        String query = """
+                    update product
+                    set quantity = ?
+                    where id = ?
+                """;
+        try {
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(query);
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setLong(2, productId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
